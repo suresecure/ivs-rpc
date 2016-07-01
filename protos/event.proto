@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+/*option java_multiple_files = true;*/
+/*option java_package = "io.grpc.examples.helloworld";*/
+/*option java_outer_classname = "HelloWorldProto";*/
+/*option objc_class_prefix = "HLW";*/
+
+package suresecureivs;
+
+/*import "common.suresecureivs.proto";*/
+
+// The greeting service definition.
+service EventReporting {
+  // Sends a greeting
+  rpc ReportEvent (Event) returns (ReportEventReply) {}
+}
+
+message Target{
+  enum TargetType{
+    person                =0;
+    object                =1;
+  }
+  int32 x = 1;
+  int32 y = 2;
+  int32 w = 3;
+  int32 h = 4;
+  TargetType type = 5;
+}
+// The request message containing the user's name.
+message Event {
+  enum EventType {
+    evt_none            =0 ; 
+    evt_people_appr     =1 ;    // 有人出现
+    evt_video_blur      =2 ;    // 视频模糊
+    evt_obj_appr        =3 ;    // 遗留物出现
+    evt_people_rec      =4 ;    // 有人要识别
+    evt_odd_people_dg   =5 ;    // 有人戴墨镜
+    evt_odd_people_cv   =6 ;    // 有人戴口罩
+    evt_fake_keyboard   =7 ;    // 疑似假键盘
+    evt_fake_cardreader =8 ;    // 疑似假读卡器
+    evt_video_crash     =9 ;    // 视频信号卡死
+    evt_no_signal       =10;    // 视频信号丢失
+    evt_people_recd     =11;    // 有人被识别
+    evt_odd_people_sw   =12;    // 有人戴丝袜
+    evt_playsound       =13;    // 专门用于播放声音的事件，无意义，不存储
+    evt_odd_people_un   =14;    // 未知异常人脸，由外加指导信号决定
+    evt_norm_people     =15;    // 有正常人脸出现
+
+    evt_people_liedown  =20;    // 有人倒地
+    evt_people_run      =21;    // 有人跑步
+    evt_people_follow   =22;    // 有人尾随
+    evt_object_stay     =23;    // 有物滞留
+    evt_people_wander   =24;    // 有人徘徊
+    evt_people_fight    =25;    // 有人打架
+    evt_region_violate  =26;    // 防护区异常
+    evt_region_in       =27;    // 进入防护区
+    evt_region_out      =28;    // 离开防护区
+    evt_depthcam_block  =29;    // 环境探测仪被遮挡
+    evt_region_normal   =30;    // 防护区正常（重异常状态恢复为正常状态）
+    evt_people_cnt      =31;    // 监控区域内人数发生变化时报警
+    evt_hit_atm         =32;    // 打砸atm机
+    evt_sensor_lost     =33;    // 传感器丢失
+    evt_people_stay     =34;    // 有人滞留
+    evt_region_in_vio   =35;    // 区域强行进入
+    evt_cam_move        =36;    // 摄像头被移动
+    evt_people_down     =37;    // 有人下蹲
+    evt_people_cnt_up   =38;    // 人数过多
+    evt_people_cnt_down =39;    // 人数过少
+    evt_follow_in       =40;    // 尾随进入
+
+    evt_fake_people     =41;    // 假人出现（照片）
+
+    evt_sample          =50;    // 样本采集事件，这种事件的description要使用原有的，因为编码了相当多的信息
+  }
+  enum EventLevel{
+    level_default         =0; 
+    level_face_recognized =1;
+  }
+
+  /*type type = 1[default=evt_none];*/
+  /*level level = 2[default=level_default];*/
+  EventType type = 1;
+  EventLevel level = 2;
+  //datetime
+  int64 seconds = 3;
+  /*int32 nanos = 4;*/
+  //images
+  repeated bytes imgs = 4;
+  repeated Target targets = 5;
+  string description = 6;
+  string hostaddress = 7;
+  uint32 hostport = 8;
+  string filename = 9;
+}
+
+// The response message containing the greetings
+message ReportEventReply {
+  string message = 1;
+}
+
+/*message GetEventRequest{*/
+  /*uint64 start_seconds = 1;*/
+  /*uint64 end_seconds = 2;*/
+  /*repeated Event.EventType types = 3;*/
+/*}*/
+
+/*message GetEventReply{*/
+  /*repeated Event events = 1;*/
+/*}*/
+

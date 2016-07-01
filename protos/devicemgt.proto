@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+/*option java_multiple_files = true;*/
+/*option java_package = "io.grpc.examples.helloworld";*/
+/*option java_outer_classname = "HelloWorldProto";*/
+/*option objc_class_prefix = "HLW";*/
+
+package suresecureivs;
+import "common.suresecureivs.proto";
+
+// The greeting service definition.
+service DeviceMgt {
+  // Sends a greeting
+  rpc GetDeviceInfo (GetDeviceInfoRequest) returns (GetDeviceInfoReply) {}
+  rpc GetNetworkConf (GetNetworkConfRequest) returns (GetNetworkConfReply){}
+  rpc SetIpv4Address (SetIpv4AddressRequest) returns (SetIpv4AddressReply){}
+  rpc SetIpv4Gateway (SetIpv4GatewayRequest) returns (SetIpv4GatewayReply){}
+  rpc Reboot (RebootRequest) returns (RebootReply){}
+  rpc Restart (RestartRequest) returns (RestartReply){}
+  rpc GetHealthyStatus (GetHealthyStatusRequest) returns (GetHealthyStatusReply){}
+}
+
+// The request message containing the user's name.
+message GetDeviceInfoRequest {
+  /*string filename = 9;*/
+}
+
+// The response message containing the greetings
+message GetDeviceInfoReply {
+  string message = 1;
+  string node_name = 2;          // 设备名称
+  string dev_type = 3;           // 设备型号
+  string node_os = 4;            // OS版本
+  int32  major_version = 5;      // 版本号
+  int32  minor_version = 6;
+  int32  revision = 7;
+}
+
+message GetNetworkConfRequest{
+}
+message GetNetworkConfReply{
+  string address = 1;
+  int32 prefix_length = 2;
+  string gateway = 3;
+  string dns = 4;
+}
+
+message SetIpv4AddressRequest{
+  string address = 1;
+  int32 prefix_length = 2;
+}
+message SetIpv4AddressReply{
+}
+
+message SetIpv4GatewayRequest{
+  string gateway = 1;
+}
+message SetIpv4GatewayReply{
+}
+
+message RebootRequest{
+}
+message RebootReply{
+}
+message RestartRequest{
+}
+message RestartReply{
+}
+message GetHealthyStatusRequest{
+}
+message GetHealthyStatusReply{
+}
