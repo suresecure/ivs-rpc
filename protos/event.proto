@@ -16,7 +16,7 @@ service EventReporting {
 }
 
 message Target{
-  enum TargetType{
+  enum Type{
     person                =0;
     object                =1;
   }
@@ -24,11 +24,16 @@ message Target{
   int32 y = 2;
   int32 w = 3;
   int32 h = 4;
-  TargetType type = 5;
+  Type type = 5;
 }
+message AnnotatedCleanImage{
+  bytes img = 1;
+  repeated Target targets = 2;
+}
+
 // The request message containing the user's name.
 message Event {
-  enum EventType {
+  enum Type {
     evt_none            =0 ; 
     evt_people_appr     =1 ;    // 有人出现
     evt_video_blur      =2 ;    // 视频模糊
@@ -72,25 +77,23 @@ message Event {
 
     evt_sample          =50;    // 样本采集事件，这种事件的description要使用原有的，因为编码了相当多的信息
   }
-  enum EventLevel{
+  enum Level{
     level_default         =0; 
     level_face_recognized =1;
   }
-
-  /*type type = 1[default=evt_none];*/
-  /*level level = 2[default=level_default];*/
-  EventType type = 1;
-  EventLevel level = 2;
+  Type type = 1;
+  Level level = 2;
   //datetime
   int64 seconds = 3;
   /*int32 nanos = 4;*/
   //images
   repeated bytes imgs = 4;
-  repeated Target targets = 5;
-  string description = 6;
-  string hostaddress = 7;
-  uint32 hostport = 8;
-  string filename = 9;
+  string description = 5;
+  string hostaddress = 6;
+  uint32 hostport = 7;
+  string filename = 8;
+
+  repeated AnnotatedCleanImage anno_imgs = 9;
 }
 
 // The response message containing the greetings
@@ -99,12 +102,12 @@ message ReportEventReply {
 }
 
 /*message GetEventRequest{*/
-  /*uint64 start_seconds = 1;*/
-  /*uint64 end_seconds = 2;*/
-  /*repeated Event.EventType types = 3;*/
+/*uint64 start_seconds = 1;*/
+/*uint64 end_seconds = 2;*/
+/*repeated Event.EventType types = 3;*/
 /*}*/
 
 /*message GetEventReply{*/
-  /*repeated Event events = 1;*/
+/*repeated Event events = 1;*/
 /*}*/
 

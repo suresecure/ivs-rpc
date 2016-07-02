@@ -2,3 +2,4 @@
 *.pb.cc
 pb2.py
 *.pyc
+*.swp
