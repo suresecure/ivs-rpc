@@ -7,3 +7,4 @@ Debug
 thirdparty/grpc*
 thirdparty/protobuf*
 *.vcxproj.user
+*.o

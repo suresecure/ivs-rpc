@@ -4,6 +4,7 @@
 import time
 
 import event_pb2
+import tasks
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
@@ -11,7 +12,11 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class EventReporting(event_pb2.BetaEventReportingServicer):
 
   def ReportEvent(self, request, context):
-    return event_pb2.ReportEventReply(message='Hello, %s!' % request.description)
+    # res = tasks.add.delay(1,2)
+    res = tasks.fall_event.delay(request)
+    result = res.get()
+    # return event_pb2.ReportEventReply(message='Hello, %s %d!' % request.description, result)
+    return event_pb2.ReportEventReply(message='Hello, %s!' % result)
 
 def serve():
   server = event_pb2.beta_create_EventReporting_server(EventReporting())
