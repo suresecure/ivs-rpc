@@ -26,6 +26,7 @@ namespace ivs_event_server
         // Server side handler of the SayHello RPC
         public override Task<ReportEventReply> ReportEvent(Event request, ServerCallContext context)
         {
+            Console.WriteLine(request.AnnoImgs);
             return Task.FromResult(new ReportEventReply { Message = "Hello " + request.Description });
         }
     }
