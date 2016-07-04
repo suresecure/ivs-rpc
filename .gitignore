@@ -1,5 +1,6 @@
 *.pb.h
 *.pb.cc
-pb2.py
+*_pb2.py
 *.pyc
 *.swp
+.ropeproject

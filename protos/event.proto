@@ -26,7 +26,7 @@ message Target{
   int32 h = 4;
   Type type = 5;
 }
-message AnnotatedCleanImage{
+message AnnotatedImage{
   bytes img = 1;
   repeated Target targets = 2;
 }
@@ -93,7 +93,7 @@ message Event {
   uint32 hostport = 7;
   string filename = 8;
 
-  repeated AnnotatedCleanImage anno_imgs = 9;
+  repeated AnnotatedImage anno_imgs = 9;
 }
 
 // The response message containing the greetings
