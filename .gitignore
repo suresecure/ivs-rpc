@@ -3,4 +3,5 @@
 *_pb2.py
 *.pyc
 *.swp
+.gitattributes
 .ropeproject

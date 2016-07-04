@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ivs-event-server", "ivs-event-server\ivs-event-server.csproj", "{A8530294-C2E9-419F-87A5-A4240FD1C077}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0CFD5BC4-236E-4E28-8AE5-B327FD259FE8}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "event", "event\event.csproj", "{281CB681-6D52-4E07-9FEC-CD3D3CB24E60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ivs-event-client", "ivs-event-client\ivs-event-client.csproj", "{CC3CE99B-53D7-4561-BB9E-B4C5EC23BBE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rmq-event-publish", "rmq-event-publish\rmq-event-publish.csproj", "{49B73AAE-4ED3-4E0B-AD26-77EB619CAF8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rmq-event-receive", "rmq-event-receive\rmq-event-receive.csproj", "{601549FE-5F05-458E-9305-859441761756}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8530294-C2E9-419F-87A5-A4240FD1C077}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8530294-C2E9-419F-87A5-A4240FD1C077}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8530294-C2E9-419F-87A5-A4240FD1C077}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8530294-C2E9-419F-87A5-A4240FD1C077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{281CB681-6D52-4E07-9FEC-CD3D3CB24E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{281CB681-6D52-4E07-9FEC-CD3D3CB24E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{281CB681-6D52-4E07-9FEC-CD3D3CB24E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{281CB681-6D52-4E07-9FEC-CD3D3CB24E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC3CE99B-53D7-4561-BB9E-B4C5EC23BBE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3CE99B-53D7-4561-BB9E-B4C5EC23BBE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC3CE99B-53D7-4561-BB9E-B4C5EC23BBE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC3CE99B-53D7-4561-BB9E-B4C5EC23BBE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49B73AAE-4ED3-4E0B-AD26-77EB619CAF8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B73AAE-4ED3-4E0B-AD26-77EB619CAF8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49B73AAE-4ED3-4E0B-AD26-77EB619CAF8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49B73AAE-4ED3-4E0B-AD26-77EB619CAF8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{601549FE-5F05-458E-9305-859441761756}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{601549FE-5F05-458E-9305-859441761756}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{601549FE-5F05-458E-9305-859441761756}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{601549FE-5F05-458E-9305-859441761756}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,7 @@
+*/bin
+*/obj
+*/Properties
+*.v12.suo
+packages
+event/Event.cs
+event/EventGrpc.cs
