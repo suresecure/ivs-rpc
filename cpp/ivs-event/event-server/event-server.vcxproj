@@ -10,10 +10,19 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\event\event.grpc.pb.cc" />
+    <ClCompile Include="..\event\event.pb.cc" />
+    <ClCompile Include="event_server.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\event\event.grpc.pb.h" />
+    <ClInclude Include="..\event\event.pb.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FC8B0606-EDA2-4934-980E-7072FB4560BD}</ProjectGuid>
+    <ProjectGuid>{7CF37C19-E06B-4186-8E05-0DA79ABF9B53}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>eventclient</RootNamespace>
+    <RootNamespace>eventserver</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,8 +50,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\source_codes\grpc-google\binary\grpc-0-13-1\include;E:\source_codes\grpc-google\binary\protobuf-3.0.0-beta-2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\source_codes\grpc-google\binary\grpc-0-13-1\lib;E:\source_codes\grpc-google\binary\protobuf-3.0.0-beta-2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\thirdparty\protobuf-3.0.0-beta-2\include;..\..\thirdparty\grpc-0-13-1\include;..\event;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\thirdparty\protobuf-3.0.0-beta-2\lib;..\..\thirdparty\grpc-0-13-1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,7 +63,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_WIN32_WINNT=0x600;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,15 +87,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\event.grpc.pb.cc" />
-    <ClCompile Include="..\event.pb.cc" />
-    <ClCompile Include="..\event_client.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\event.grpc.pb.h" />
-    <ClInclude Include="..\event.pb.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

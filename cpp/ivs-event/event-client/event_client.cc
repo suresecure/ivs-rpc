@@ -25,7 +25,7 @@ class EventReportingClient {
     // Data we are sending to the server.
     Event request;
     request.set_description(user);
-	request.set_type(suresecureivs::Event_EventType_evt_none);
+	request.set_type(suresecureivs::Event_Type_evt_none);
 
     // Container for the data we expect from the server.
     ReportEventReply reply;
@@ -54,8 +54,10 @@ int main(int argc, char** argv) {
   // are created. This channel models a connection to an endpoint (in this case,
   // localhost at port 50051). We indicate that the channel isn't authenticated
   // (use of InsecureChannelCredentials()).
+  //EventReportingClient reporter(grpc::CreateChannel(
+  //    "192.168.3.42:50051", grpc::InsecureChannelCredentials()));
   EventReportingClient reporter(grpc::CreateChannel(
-      "192.168.3.42:50051", grpc::InsecureChannelCredentials()));
+      "localhost:50051", grpc::InsecureChannelCredentials()));
   std::string user("world");
   std::string reply = reporter.ReportEvent(user);
   std::cout << "Reporter received: " << reply << std::endl;
