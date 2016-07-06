@@ -8,6 +8,6 @@ cd /d %~dp0
 set PROTOC_PATH=..\thirdparty\protobuf-3.0.0-beta-2\bin
 set GRPC_PATH=..\thirdparty\grpc-0-13-1\bin
 
-%PROTOC_PATH%\protoc.exe -I../../protos --cpp_out event  ../../protos/event.proto --grpc_out event --plugin=protoc-gen-grpc=%GRPC_PATH%\grpc_cpp_plugin.exe
+%PROTOC_PATH%\protoc.exe -I../../protos --cpp_out .  ../../protos/image_analysis.proto --grpc_out . --plugin=protoc-gen-grpc=%GRPC_PATH%\grpc_cpp_plugin.exe
 
 endlocal

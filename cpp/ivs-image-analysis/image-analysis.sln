@@ -3,15 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "event-client", "event-client\event-client.vcxproj", "{FC8B0606-EDA2-4934-980E-7072FB4560BD}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "event-server", "event-server\event-server.vcxproj", "{7CF37C19-E06B-4186-8E05-0DA79ABF9B53}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "event-async-client", "event-async-client\event-async-client.vcxproj", "{F5EDB234-7198-4E9F-ABFE-DB7B57B1E52E}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "event-async-client2", "event-async-client2\event-async-client2.vcxproj", "{63549604-CCDA-4ADA-91B5-4E62EAF41435}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "event-async-server", "event-async-server\event-async-server.vcxproj", "{02D97B5E-778D-43ED-9AD4-E2EE2EDDA2B2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "image-analysis-async-client2", "image-analysis-async-client2.vcxproj", "{4183B9F6-B131-43D5-8831-91836D6CBD64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,26 +11,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FC8B0606-EDA2-4934-980E-7072FB4560BD}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FC8B0606-EDA2-4934-980E-7072FB4560BD}.Debug|Win32.Build.0 = Debug|Win32
-		{FC8B0606-EDA2-4934-980E-7072FB4560BD}.Release|Win32.ActiveCfg = Release|Win32
-		{FC8B0606-EDA2-4934-980E-7072FB4560BD}.Release|Win32.Build.0 = Release|Win32
-		{7CF37C19-E06B-4186-8E05-0DA79ABF9B53}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7CF37C19-E06B-4186-8E05-0DA79ABF9B53}.Debug|Win32.Build.0 = Debug|Win32
-		{7CF37C19-E06B-4186-8E05-0DA79ABF9B53}.Release|Win32.ActiveCfg = Release|Win32
-		{7CF37C19-E06B-4186-8E05-0DA79ABF9B53}.Release|Win32.Build.0 = Release|Win32
-		{F5EDB234-7198-4E9F-ABFE-DB7B57B1E52E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F5EDB234-7198-4E9F-ABFE-DB7B57B1E52E}.Debug|Win32.Build.0 = Debug|Win32
-		{F5EDB234-7198-4E9F-ABFE-DB7B57B1E52E}.Release|Win32.ActiveCfg = Release|Win32
-		{F5EDB234-7198-4E9F-ABFE-DB7B57B1E52E}.Release|Win32.Build.0 = Release|Win32
-		{63549604-CCDA-4ADA-91B5-4E62EAF41435}.Debug|Win32.ActiveCfg = Debug|Win32
-		{63549604-CCDA-4ADA-91B5-4E62EAF41435}.Debug|Win32.Build.0 = Debug|Win32
-		{63549604-CCDA-4ADA-91B5-4E62EAF41435}.Release|Win32.ActiveCfg = Release|Win32
-		{63549604-CCDA-4ADA-91B5-4E62EAF41435}.Release|Win32.Build.0 = Release|Win32
-		{02D97B5E-778D-43ED-9AD4-E2EE2EDDA2B2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{02D97B5E-778D-43ED-9AD4-E2EE2EDDA2B2}.Debug|Win32.Build.0 = Debug|Win32
-		{02D97B5E-778D-43ED-9AD4-E2EE2EDDA2B2}.Release|Win32.ActiveCfg = Release|Win32
-		{02D97B5E-778D-43ED-9AD4-E2EE2EDDA2B2}.Release|Win32.Build.0 = Release|Win32
+		{4183B9F6-B131-43D5-8831-91836D6CBD64}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4183B9F6-B131-43D5-8831-91836D6CBD64}.Debug|Win32.Build.0 = Debug|Win32
+		{4183B9F6-B131-43D5-8831-91836D6CBD64}.Release|Win32.ActiveCfg = Release|Win32
+		{4183B9F6-B131-43D5-8831-91836D6CBD64}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

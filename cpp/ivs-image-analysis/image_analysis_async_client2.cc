@@ -7,7 +7,6 @@
 #include <thread>
 
 #include "image_analysis.grpc.pb.h"
-#include <unistd.h>
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
