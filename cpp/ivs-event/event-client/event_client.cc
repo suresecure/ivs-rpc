@@ -13,6 +13,8 @@ using grpc::Status;
 using suresecureivs::Event;
 using suresecureivs::ReportEventReply;
 using suresecureivs::EventReporting;
+using suresecureivs::AnnotatedImage;
+using suresecureivs::Target;
 
 class EventReportingClient {
  public:
@@ -25,6 +27,14 @@ class EventReportingClient {
     // Data we are sending to the server.
     Event request;
     request.set_description(user);
+	AnnotatedImage *anno_img = request.add_anno_imgs();
+	Target *ntarget = anno_img->add_targets();
+	ntarget->set_x(0);
+	ntarget->set_y(1);
+	ntarget->set_w(2);
+	ntarget->set_h(3);
+	ntarget->set_type(suresecureivs::Target_Type_person);
+	anno_img->set_img("123");
 	request.set_type(suresecureivs::Event_Type_evt_none);
 
     // Container for the data we expect from the server.

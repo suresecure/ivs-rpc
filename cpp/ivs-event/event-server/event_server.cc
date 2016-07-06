@@ -19,6 +19,16 @@ class EventReportingServiceImpl final : public EventReporting::Service {
   Status ReportEvent(ServerContext* context, const Event* request,
                   ReportEventReply* reply) override {
     std::string prefix("Hello ");
+	std::cout << request->anno_imgs_size() << std::endl;
+	if (request->anno_imgs_size() > 0)
+	{
+		std::cout << request->anno_imgs(0).img() << std::endl;
+		std::cout << request->anno_imgs(0).targets_size() << std::endl;
+		if (request->anno_imgs(0).targets_size() > 0)
+		{
+			std::cout << request->anno_imgs(0).targets(0).x() << std::endl;
+		}
+	}
 	std::cout << "request name: " << request->description() << std::endl;
     reply->set_message(prefix + request->description());
     return Status::OK;
