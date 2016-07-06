@@ -1,17 +1,12 @@
 from __future__ import absolute_import
 import image_analysis_pb2
 import numpy as np
+import os
 from os import path, environ
-# import json
-# from flask import Flask, Blueprint, abort, jsonify, request, session
-# import flask
 import optparse
 import settings
-# import tornado.wsgi
-# import tornado.httpserver
 import celery
 import logging
-# import batches
 import time
 import _init_paths
 import caffe
@@ -49,19 +44,23 @@ def configure_workers(sender, signal):
     # print signal.__dict__
     # print sender
     # time.sleep(10)
-    caffe.set_mode_gpu()
+    # caffe.set_mode_gpu()
     print current_process().index
-    caffe.set_device(current_process().index)
-    print "worker init" + str(os.getpid())
+    # caffe.set_device(current_process().index)
+    # print "worker init" + str(os.getpid())
     # Make classifier.
-    model_def = ""
-    pretrained_model = ""
-    mean_file = ""
-    mean = np.load(mean_file)
+    model_def = "/home/mythxcq/caffe_person_classification_models/google_net/deploy_112.prototxt"
+    pretrained_model = "/home/mythxcq/caffe_person_classification_models/google_net/finetune_person_googlenet_112.caffemodel"
+    # mean_file = ""
+    # mean = np.load(mean_file)
+    mean = np.empty((3,112,112),dtype=np.float32)
+    mean[0] = 104
+    mean[1] = 117
+    mean[2] = 123
+    global classifier
     classifier = caffe.Classifier(model_def, pretrained_model,
-            image_dims=None, mean=mean)
+            mean=mean)
 
-import os
 @the_celery.task(name="tasks.ImageClassify")
 def ImageClassify(image_region):
     string_buffer = StringIO.StringIO(image_region.img)
@@ -69,9 +68,13 @@ def ImageClassify(image_region):
     inputs = [image]
     predictions = classifier.predict(inputs, False)
     print predictions
+    if predictions[0][1] > 0.8:
+        return image_analysis_pb2.ImageClassifyReply.PERSON
+    else:
+        return image_analysis_pb2.ImageClassifyReply.BACK_GROUND
     # print current_process().index
     # time.sleep(2)
-    return image_analysis_pb2.ImageClassifyReply.BACK_GROUND
+
 # import celery.contrib.batches
 # @the_celery.task(name="tasks.add", base=celery.contrib.batches.Batches, flush_every=4, flush_interval=2)
 # def add(requests):
