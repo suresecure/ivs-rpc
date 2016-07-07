@@ -4,12 +4,14 @@ classify.py is an out-of-the-box image classifer callable from the command line.
 
 By default it configures and runs the Caffe reference ImageNet model.
 """
+import _init_paths
 import numpy as np
 import os
 import sys
 import argparse
 import glob
 import time
+import cStringIO as StringIO
 
 import caffe
 
@@ -104,10 +106,18 @@ def main(argv):
         print("CPU mode")
 
     # Make classifier.
+    # classifier = caffe.Classifier(args.model_def, args.pretrained_model,
+            # image_dims=image_dims, mean=mean,
+            # input_scale=args.input_scale, raw_scale=args.raw_scale,
+            # channel_swap=channel_swap)
+    # mean = np.empty((3, 224,224),dtype=np.float32)
+    # mean[0] = 104
+    # mean[1] = 117
+    # mean[2] = 123
+    mean = np.array([104,117,123])
     classifier = caffe.Classifier(args.model_def, args.pretrained_model,
-            image_dims=image_dims, mean=mean,
-            input_scale=args.input_scale, raw_scale=args.raw_scale,
-            channel_swap=channel_swap)
+            image_dims=image_dims, mean=mean, input_scale=None, raw_scale=255.0)
+            # channel_swap=channel_swap)
 
     # Load numpy array (.npy), directory glob (*.jpg), or image file.
     args.input_file = os.path.expanduser(args.input_file)
@@ -120,13 +130,22 @@ def main(argv):
                  for im_f in glob.glob(args.input_file + '/*.' + args.ext)]
     else:
         print("Loading file: %s" % args.input_file)
-        inputs = [caffe.io.load_image(args.input_file)]
+        img_file = open(args.input_file, "rb")
+        img_data = img_file.read()
+        img_file.close()
+        string_buffer = StringIO.StringIO(img_data)
+        img = caffe.io.load_image(string_buffer)
+        print(img.shape)
+        # inputs = [caffe.io.load_image(args.input_file)]
+        inputs = [img,img]
 
     print("Classifying %d inputs." % len(inputs))
 
     # Classify.
     start = time.time()
     predictions = classifier.predict(inputs, not args.center_only)
+    print(predictions)
+    print(predictions.shape)
     print("Done in %.2f s." % (time.time() - start))
 
     # Save
