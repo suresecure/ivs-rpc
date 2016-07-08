@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <unistd.h>
 
 #include <grpc++/grpc++.h>
 
@@ -53,6 +54,9 @@ class EventReportingClient {
     rpc->Finish(&reply, &status, (void*)1);
     void* got_tag;
     bool ok = false;
+
+    sleep(1);
+    std::cout<<"After sleep!\n";
     // Block until the next result is available in the completion queue "cq".
     cq.Next(&got_tag, &ok);
 

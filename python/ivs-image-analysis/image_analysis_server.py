@@ -16,8 +16,8 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class ImageAnalysis(image_analysis_pb2.BetaImageAnalysisServicer):
 
   def ImageClassify(self, request, context):
-    string_buffer = StringIO.StringIO(request.img)
-    img = caffe.io.load_image(string_buffer)
+    # string_buffer = StringIO.StringIO(request.img)
+    # img = caffe.io.load_image(string_buffer)
     # plt.figure()
     # plt.imshow(img)
     # plt.show()
