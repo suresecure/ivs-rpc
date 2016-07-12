@@ -1,35 +1,39 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 #define _WIN32_WINNT 0x0600
 #include <grpc++/grpc++.h>
 
-#include "event.grpc.pb.h"
+#include "suresecureivs.grpc.pb.h"
+#include <unistd.h>
 
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
 using suresecureivs::Event;
-using suresecureivs::ReportEventReply;
+using suresecureivs::GeneralReply;
 using suresecureivs::EventReporting;
 
 // Logic and data behind the server's behavior.
 class EventReportingServiceImpl final : public EventReporting::Service {
   Status ReportEvent(ServerContext* context, const Event* request,
-                  ReportEventReply* reply) override {
+                  GeneralReply* reply) override {
     std::string prefix("Hello ");
-	std::cout << request->anno_imgs_size() << std::endl;
-	if (request->anno_imgs_size() > 0)
-	{
-		std::cout << request->anno_imgs(0).img() << std::endl;
-		std::cout << request->anno_imgs(0).targets_size() << std::endl;
-		if (request->anno_imgs(0).targets_size() > 0)
-		{
-			std::cout << request->anno_imgs(0).targets(0).x() << std::endl;
-		}
-	}
-	std::cout << "request name: " << request->description() << std::endl;
+    std::cout<<std::this_thread::get_id()<<std::endl;
+    sleep(4);
+	//std::cout << request->anno_imgs_size() << std::endl;
+	//if (request->anno_imgs_size() > 0)
+	//{
+		//std::cout << request->anno_imgs(0).img() << std::endl;
+		//std::cout << request->anno_imgs(0).targets_size() << std::endl;
+		//if (request->anno_imgs(0).targets_size() > 0)
+		//{
+			//std::cout << request->anno_imgs(0).targets(0).x() << std::endl;
+		//}
+	//}
+	//std::cout << "request name: " << request->description() << std::endl;
     reply->set_message(prefix + request->description());
     return Status::OK;
   }

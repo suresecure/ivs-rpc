@@ -41,10 +41,10 @@ message EventServerAddress{
 /*// The response message containing the greetings*/
 /*message GetDeviceInfoReply {*/
   /*string message = 1;*/
-  /*string node_name = 2;          // 设备名称*/
-  /*string dev_type = 3;           // 设备型号*/
-  /*string node_os = 4;            // OS版本*/
-  /*int32  major_version = 5;      // 版本号*/
+  /*string node_name = 2;          // device name*/
+  /*string dev_type = 3;           // device model*/
+  /*string node_os = 4;            // OS version*/
+  /*int32  major_version = 5;      // version*/
   /*int32  minor_version = 6;*/
   /*int32  revision = 7;*/
 /*}*/
@@ -249,9 +249,9 @@ message Event {
 
 /*message ReinitRequest{*/
   /*enum SCOPE{*/
-    /*SCOPE_NODE        =0; // 范围限定符：指明命令作用于节点级*/
-    /*SCOPE_PORT        =1; // 范围限定符：指明命令作用于通道级*/
-    /*SCOPE_MODULE      =2; // 范围限定符：指明命令作用于模块级*/
+    /*SCOPE_NODE        =0; // */
+    /*SCOPE_PORT        =1; // */
+    /*SCOPE_MODULE      =2; // */
   /*}*/
   /*SCOPE scope = 1;*/
   /*int32 port = 2;*/
