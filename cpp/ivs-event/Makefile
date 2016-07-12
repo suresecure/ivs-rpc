@@ -1,5 +1,5 @@
 CXX = g++
-CPPFLAGS += -I/usr/local/include -I./event -pthread
+CPPFLAGS += -I/usr/local/include -I./suresecureivs -pthread
 CXXFLAGS += -std=c++11
 LDFLAGS += -L/usr/local/lib `pkg-config --libs grpc++` -lprotobuf -lpthread -ldl -lgrpc
 PROTOC = protoc
@@ -13,13 +13,13 @@ vpath %.proto $(PROTOS_PATH)
 all: system-check event_client event_async_client 
 	#event_async_client2 
 
-event_client: event/event.pb.o event/event.grpc.pb.o event-client/event_client.o
+event_client: suresecureivs/suresecureivs.pb.o suresecureivs/suresecureivs.grpc.pb.o event-client/event_client.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 #event_server: event.pb.o event.grpc.pb.o event_server.o
 	#$(CXX) $^ $(LDFLAGS) -o $@
 
-event_async_client: event/event.pb.o event/event.grpc.pb.o event-async-client/event_async_client.o
+event_async_client: suresecureivs/suresecureivs.pb.o suresecureivs/suresecureivs.grpc.pb.o event-async-client/event_async_client.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 #event_async_client2: event.pb.o event.grpc.pb.o event_async_client2.o
@@ -29,15 +29,15 @@ event_async_client: event/event.pb.o event/event.grpc.pb.o event-async-client/ev
 	#$(CXX) $^ $(LDFLAGS) -o $@
 
 .PRECIOUS: %.grpc.pb.cc
-event/%.grpc.pb.cc: %.proto
-	$(PROTOC) -I $(PROTOS_PATH) --grpc_out=event --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<
+suresecureivs/%.grpc.pb.cc: %.proto
+	$(PROTOC) -I $(PROTOS_PATH) --grpc_out=suresecureivs --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<
 
 .PRECIOUS: %.pb.cc
-event/%.pb.cc: %.proto
-	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=event $<
+suresecureivs/%.pb.cc: %.proto
+	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=suresecureivs $<
 
 clean:
-	rm -f event/*.o event/*.pb.cc event/*.pb.h event_client/*.o event_async_client/*.o event_client event_async_client
+	rm -f suresecureivs/*.o suresecureivs/*.pb.cc suresecureivs/*.pb.h event_client/*.o event_async_client/*.o event_client event_async_client
 
 #rm -f *.o *.pb.cc *.pb.h event_client event_async_client event_async_client2 
 

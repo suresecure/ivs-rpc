@@ -5,7 +5,7 @@
 
 #include <grpc++/grpc++.h>
 
-#include "event.grpc.pb.h"
+#include "suresecureivs.grpc.pb.h"
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
@@ -13,7 +13,7 @@ using grpc::ClientContext;
 using grpc::CompletionQueue;
 using grpc::Status;
 using suresecureivs::Event;
-using suresecureivs::ReportEventReply;
+using suresecureivs::GeneralReply;
 using suresecureivs::EventReporting;
 
 class EventReportingClient {
@@ -29,7 +29,7 @@ class EventReportingClient {
     request.set_description(user);
 
     // Container for the data we expect from the server.
-    ReportEventReply reply;
+    GeneralReply reply;
 
     // Context for the client. It could be used to convey extra information to
     // the server and/or tweak certain RPC behaviors.
@@ -45,7 +45,7 @@ class EventReportingClient {
     // stub_->AsyncSayHello() performs the RPC call, returning an instance we
     // store in "rpc". Because we are using the asynchronous API, we need to
     // hold on to the "rpc" instance in order to get updates on the ongoing RPC.
-    std::unique_ptr<ClientAsyncResponseReader<ReportEventReply> > rpc(
+    std::unique_ptr<ClientAsyncResponseReader<GeneralReply> > rpc(
         stub_->AsyncReportEvent(&context, request, &cq));
 
     // Request that, upon completion of the RPC, "reply" be updated with the

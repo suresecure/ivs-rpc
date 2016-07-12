@@ -1,0 +1,293 @@
+syntax = "proto3";
+
+/*option java_multiple_files = true;*/
+/*option java_package = "io.grpc.examples.helloworld";*/
+/*option java_outer_classname = "HelloWorldProto";*/
+/*option objc_class_prefix = "HLW";*/
+
+package suresecureivs;
+
+message Empty{
+}
+message GeneralReply{
+  int32 error_code = 1;
+  string message = 2;
+}
+
+/*enum ErrorCode{*/
+/*}*/
+
+// The device management service definition.
+service DeviceMgt {
+  rpc GetHealthyStatus (Empty) returns (Empty){}
+  rpc GetEventServerAddress(Empty) returns (EventServerAddress){}
+  rpc SetEventServerAddress(EventServerAddress) returns (GeneralReply){}
+  /*rpc GetDeviceInfo (GetDeviceInfoRequest) returns (GetDeviceInfoReply) {}*/
+  /*rpc GetNetworkConf (GetNetworkConfRequest) returns (GetNetworkConfReply){}*/
+  /*rpc SetIpv4Address (SetIpv4AddressRequest) returns (SetIpv4AddressReply){}*/
+  /*rpc SetIpv4Gateway (SetIpv4GatewayRequest) returns (SetIpv4GatewayReply){}*/
+  /*rpc Reboot (RebootRequest) returns (RebootReply){}*/
+  /*rpc Restart (RestartRequest) returns (RestartReply){}*/
+}
+message EventServerAddress{
+  string address = 1;
+}
+
+/*// The request message containing the user's name.*/
+/*message GetDeviceInfoRequest {*/
+  /*[>string filename = 9;<]*/
+/*}*/
+
+/*// The response message containing the greetings*/
+/*message GetDeviceInfoReply {*/
+  /*string message = 1;*/
+  /*string node_name = 2;          // 设备名称*/
+  /*string dev_type = 3;           // 设备型号*/
+  /*string node_os = 4;            // OS版本*/
+  /*int32  major_version = 5;      // 版本号*/
+  /*int32  minor_version = 6;*/
+  /*int32  revision = 7;*/
+/*}*/
+
+/*message GetNetworkConfRequest{*/
+/*}*/
+/*message GetNetworkConfReply{*/
+  /*string address = 1;*/
+  /*int32 prefix_length = 2;*/
+  /*string gateway = 3;*/
+  /*string dns = 4;*/
+/*}*/
+
+/*message SetIpv4AddressRequest{*/
+  /*string address = 1;*/
+  /*int32 prefix_length = 2;*/
+/*}*/
+/*message SetIpv4AddressReply{*/
+/*}*/
+
+/*message SetIpv4GatewayRequest{*/
+  /*string gateway = 1;*/
+/*}*/
+/*message SetIpv4GatewayReply{*/
+/*}*/
+
+/*message RebootRequest{*/
+/*}*/
+/*message RebootReply{*/
+/*}*/
+/*message RestartRequest{*/
+/*}*/
+/*message RestartReply{*/
+/*}*/
+
+// The event service definition.
+service EventReporting {
+  // Sends a greeting
+  rpc ReportEvent (Event) returns (GeneralReply) {}
+}
+
+message Target{
+  enum Type{
+    person                =0;
+    object                =1;
+  }
+  enum Status{
+    normal                =0;
+    abnormal              =1;
+  }
+  int32 x = 1;
+  int32 y = 2;
+  int32 w = 3;
+  int32 h = 4;
+  Type type = 5;
+  Status status = 6;
+}
+
+enum SettingAreaType{
+  meter_area  = 0;
+  guard_area  = 1;
+  cross_line  = 2;
+  atmdoor_area  = 3;
+  object_protection_area = 4;
+}
+message SettingArea{
+  enum Status{
+    normal = 0;
+    abnormal = 1;
+  }
+  SettingAreaType type = 1;
+  repeated int32 x=2;
+  repeated int32 y=3;
+  Status status = 4;
+  string comment = 5;
+}
+message AnnotatedImage{
+  bytes img = 1;
+  string comment = 2;
+  repeated Target targets = 3;
+  repeated SettingArea setting_areas = 4;
+}
+
+// The request message containing the user's name.
+message Event {
+  string guid = 1;
+  int32 type = 2;
+  int64 seconds = 3;
+  repeated AnnotatedImage anno_imgs = 4;
+
+  string description = 5;
+  string hostaddress = 6;
+  int32 channel = 7;
+  string video_filename = 8;
+  int32 person_num = 9;
+  int32 meter_area_num = 10;
+  string frontend_version = 11;
+
+  //reserved for server
+  enum Status{
+    normal = 0;
+    file_saved = 1;
+    db_saved = 2;
+    queue_saved = 3;
+    client_received = 4;
+    client_processing = 5;
+    client_suspend = 6;
+    complete = 100;
+  }
+  Status status = 30;
+  int64 recv_dtime = 31;
+  int32 handle_dtime = 32;
+  string remark = 33;
+}
+
+/*message GetEventRequest{*/
+/*uint64 start_seconds = 1;*/
+/*uint64 end_seconds = 2;*/
+/*repeated Event.EventType types = 3;*/
+/*}*/
+
+/*message GetEventReply{*/
+/*repeated Event events = 1;*/
+/*}*/
+
+// The analytic service definition.
+/*service Analytics {*/
+  /*rpc GetNodeDesc(GetNodeDescRequest) returns (NodeDesc) {}*/
+  /*rpc Reinit (ReinitRequest) returns (ReinitReply) {}*/
+  /*rpc SetParam (SetParamRequest) returns (SetParamReply){}*/
+/*}*/
+
+/*message SelectItemValue{*/
+  /*int32 value = 1;*/
+  /*string comment = 2;*/
+/*}*/
+
+/*message SimpleSettingValue{*/
+  /*int32 int_val = 1;*/
+  /*double double_val = 2;*/
+  /*string string_val = 3;*/
+/*}*/
+
+/*message PolySettingValue{*/
+  /*SettingAreaType type = 1;*/
+  /*repeated int32 x = 2;*/
+  /*repeated int32 y = 3;*/
+  /*repeated SimpleSettingValue params = 4;*/
+/*}*/
+/*message SettingItemValue{*/
+  /*string name = 1;*/
+  /*int32 index = 2;*/
+  /*SimpleSettingValue simple_val = 3;*/
+  /*PolySettingValue poly_val = 4;*/
+/*}*/
+
+/*enum SettingType{*/
+  /*Integer = 0;*/
+  /*Double = 1;*/
+  /*Select = 2;*/
+  /*String = 3;*/
+  /*Poly = 4;*/
+/*};*/
+/*message SettingItemDesc{*/
+  /*string name = 1;*/
+  /*string comment = 2;*/
+  /*SettingType setting_type = 3;*/
+  /*double upper = 4;*/
+  /*double lower = 5;*/
+  /*repeated SelectItemValue choice = 6;*/
+  /*SettingItemValue val = 7;*/
+/*}*/
+
+/*message ModuleDesc{*/
+  /*string name = 1;*/
+  /*int32 index = 2;*/
+  /*bool enabled = 3;*/
+  /*repeated SettingItemDesc params = 4;*/
+/*}*/
+
+/*message PortDesc{*/
+  /*enum Type{*/
+    /*INV  =0;*/
+    /*DEP  =1;*/
+    /*RGB  =2;*/
+    /*NODE =3; */
+  /*}*/
+  /*string name = 1;*/
+  /*int32 num = 2;*/
+  /*Type type = 3;*/
+  /*repeated ModuleDesc modules = 4;*/
+  /*repeated SettingItemDesc params = 5;*/
+/*}*/
+
+/*message NodeDesc{*/
+  /*repeated SettingItemDesc params = 1;*/
+  /*repeated PortDesc ports = 2;*/
+/*}*/
+
+/*message GetNodeDescRequest{*/
+/*}*/
+
+/*message ReinitRequest{*/
+  /*enum SCOPE{*/
+    /*SCOPE_NODE        =0; // 范围限定符：指明命令作用于节点级*/
+    /*SCOPE_PORT        =1; // 范围限定符：指明命令作用于通道级*/
+    /*SCOPE_MODULE      =2; // 范围限定符：指明命令作用于模块级*/
+  /*}*/
+  /*SCOPE scope = 1;*/
+  /*int32 port = 2;*/
+  /*int32 module = 3;*/
+  /*int32 frames = 4;*/
+/*}*/
+/*message ReinitReply{*/
+/*}*/
+
+/*message SetParamRequest{*/
+  /*SCOPE scope = 1;*/
+  /*int32 port = 2;*/
+  /*int32 module = 3;*/
+  /*repeated SettingItemValue settings = 4;*/
+/*}*/
+/*message SetParamReply{*/
+/*}*/
+
+//the image analysis service
+service ImageAnalysis {
+  // Sends a greeting
+  rpc ImageClassify (ImageRegion) returns (ImageClassifyReply) {}
+}
+
+message ImageRegion{
+  bytes img = 1;
+  int32 x = 2;
+  int32 y = 3;
+  int32 w = 4;
+  int32 h = 5;
+}
+
+message ImageClassifyReply{
+  enum Type{
+    BACK_GROUND = 0;
+    PERSON = 1;
+  }
+  Type type = 1;
+}

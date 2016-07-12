@@ -5,13 +5,13 @@
 
 #include <grpc++/grpc++.h>
 
-#include "event.grpc.pb.h"
+#include "suresecureivs.grpc.pb.h"
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
 using suresecureivs::Event;
-using suresecureivs::ReportEventReply;
+using suresecureivs::GeneralReply;
 using suresecureivs::EventReporting;
 using suresecureivs::AnnotatedImage;
 using suresecureivs::Target;
@@ -35,10 +35,10 @@ class EventReportingClient {
 	ntarget->set_h(3);
 	ntarget->set_type(suresecureivs::Target_Type_person);
 	anno_img->set_img("123");
-	request.set_type(suresecureivs::Event_Type_evt_none);
+	request.set_type(0);
 
     // Container for the data we expect from the server.
-    ReportEventReply reply;
+    GeneralReply reply;
 
     // Context for the client. It could be used to convey extra information to
     // the server and/or tweak certain RPC behaviors.
