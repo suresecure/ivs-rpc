@@ -10,7 +10,7 @@ PROTOS_PATH = ../../protos
 
 vpath %.proto $(PROTOS_PATH)
 
-all: system-check event_client event_async_client event_server
+all: system-check event_client event_async_client event_server event_async_server
 	#event_async_client2 
 
 event_client: suresecureivs/suresecureivs.pb.o suresecureivs/suresecureivs.grpc.pb.o event-client/event_client.o
@@ -25,8 +25,8 @@ event_async_client: suresecureivs/suresecureivs.pb.o suresecureivs/suresecureivs
 #event_async_client2: event.pb.o event.grpc.pb.o event_async_client2.o
 	#$(CXX) $^ $(LDFLAGS) -o $@
 
-#event_async_server: event.pb.o event.grpc.pb.o event_async_server.o
-	#$(CXX) $^ $(LDFLAGS) -o $@
+event_async_server: suresecureivs/suresecureivs.pb.o suresecureivs/suresecureivs.grpc.pb.o event-async-server/event_async_server.o
+	$(CXX) $^ $(LDFLAGS) -o $@
 
 .PRECIOUS: %.grpc.pb.cc
 suresecureivs/%.grpc.pb.cc: %.proto

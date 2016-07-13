@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-import event_pb2
+import suresecureivs_pb2 as ss_pb2
 import numpy as np
 from os import path, environ
 # import json

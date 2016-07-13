@@ -3,10 +3,11 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <unistd.h>
 
 #include <grpc++/grpc++.h>
 
-#include "event.grpc.pb.h"
+#include "suresecureivs.grpc.pb.h"
 
 using grpc::Server;
 using grpc::ServerAsyncResponseWriter;
@@ -15,7 +16,7 @@ using grpc::ServerContext;
 using grpc::ServerCompletionQueue;
 using grpc::Status;
 using suresecureivs::Event;
-using suresecureivs::ReportEventReply;
+using suresecureivs::GeneralReply;
 using suresecureivs::EventReporting;
 
 class ServerImpl final {
@@ -82,6 +83,9 @@ class ServerImpl final {
         std::string prefix("Hello ");
         reply_.set_message(prefix + request_.description());
 
+        std::cout<<std::this_thread::get_id()<<std::endl;
+        sleep(10);
+
         // And we are done! Let the gRPC runtime know we've finished, using the
         // memory address of this instance as the uniquely identifying tag for
         // the event.
@@ -108,10 +112,10 @@ class ServerImpl final {
     // What we get from the client.
     Event request_;
     // What we send back to the client.
-    ReportEventReply reply_;
+    GeneralReply reply_;
 
     // The means to get back to the client.
-    ServerAsyncResponseWriter<ReportEventReply> responder_;
+    ServerAsyncResponseWriter<GeneralReply> responder_;
 
     // Let's implement a tiny state machine with the following states.
     enum CallStatus { CREATE, PROCESS, FINISH };
