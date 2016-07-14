@@ -20,8 +20,10 @@ message GeneralReply{
 // The device management service definition.
 service DeviceMgt {
   rpc GetHealthyStatus (Empty) returns (Empty){}
-  rpc GetEventServerAddress(Empty) returns (EventServerAddress){}
-  rpc SetEventServerAddress(EventServerAddress) returns (GeneralReply){}
+  rpc GetEventServerAddress(Empty) returns (NetworkEndpoint){}
+  rpc SetEventServerAddress(NetworkEndpoint) returns (GeneralReply){}
+  rpc GetImageAnalysisServerAddress(Empty) returns (NetworkEndpoint){}
+  rpc SetImageAnalysisServerAddress(NetworkEndpoint) returns (GeneralReply){}
   /*rpc GetDeviceInfo (GetDeviceInfoRequest) returns (GetDeviceInfoReply) {}*/
   /*rpc GetNetworkConf (GetNetworkConfRequest) returns (GetNetworkConfReply){}*/
   /*rpc SetIpv4Address (SetIpv4AddressRequest) returns (SetIpv4AddressReply){}*/
@@ -29,8 +31,10 @@ service DeviceMgt {
   /*rpc Reboot (RebootRequest) returns (RebootReply){}*/
   /*rpc Restart (RestartRequest) returns (RestartReply){}*/
 }
-message EventServerAddress{
-  string address = 1;
+
+message NetworkEndpoint{
+string address = 1;
+int32 port = 2;
 }
 
 /*// The request message containing the user's name.*/
@@ -142,7 +146,10 @@ message Event {
   int32 person_num = 9;
   int32 meter_area_num = 10;
   string frontend_version = 11;
+}
 
+message EventForServer{
+  Event event_content;
   //reserved for server
   enum Status{
     normal = 0;
@@ -154,10 +161,10 @@ message Event {
     client_suspend = 6;
     complete = 100;
   }
-  Status status = 30;
-  int64 recv_dtime = 31;
-  int32 handle_dtime = 32;
-  string remark = 33;
+  Status status = 1;
+  int64 recv_dtime = 2;
+  int32 handle_dtime = 3;
+  string remark = 4;
 }
 
 /*message GetEventRequest{*/
@@ -172,100 +179,100 @@ message Event {
 
 // The analytic service definition.
 /*service Analytics {*/
-  /*rpc GetNodeDesc(GetNodeDescRequest) returns (NodeDesc) {}*/
-  /*rpc Reinit (ReinitRequest) returns (ReinitReply) {}*/
-  /*rpc SetParam (SetParamRequest) returns (SetParamReply){}*/
+/*rpc GetNodeDesc(GetNodeDescRequest) returns (NodeDesc) {}*/
+/*rpc Reinit (ReinitRequest) returns (ReinitReply) {}*/
+/*rpc SetParam (SetParamRequest) returns (SetParamReply){}*/
 /*}*/
 
 /*message SelectItemValue{*/
-  /*int32 value = 1;*/
-  /*string comment = 2;*/
+/*int32 value = 1;*/
+/*string comment = 2;*/
 /*}*/
 
 /*message SimpleSettingValue{*/
-  /*int32 int_val = 1;*/
-  /*double double_val = 2;*/
-  /*string string_val = 3;*/
+/*int32 int_val = 1;*/
+/*double double_val = 2;*/
+/*string string_val = 3;*/
 /*}*/
 
 /*message PolySettingValue{*/
-  /*SettingAreaType type = 1;*/
-  /*repeated int32 x = 2;*/
-  /*repeated int32 y = 3;*/
-  /*repeated SimpleSettingValue params = 4;*/
+/*SettingAreaType type = 1;*/
+/*repeated int32 x = 2;*/
+/*repeated int32 y = 3;*/
+/*repeated SimpleSettingValue params = 4;*/
 /*}*/
 /*message SettingItemValue{*/
-  /*string name = 1;*/
-  /*int32 index = 2;*/
-  /*SimpleSettingValue simple_val = 3;*/
-  /*PolySettingValue poly_val = 4;*/
+/*string name = 1;*/
+/*int32 index = 2;*/
+/*SimpleSettingValue simple_val = 3;*/
+/*PolySettingValue poly_val = 4;*/
 /*}*/
 
 /*enum SettingType{*/
-  /*Integer = 0;*/
-  /*Double = 1;*/
-  /*Select = 2;*/
-  /*String = 3;*/
-  /*Poly = 4;*/
+/*Integer = 0;*/
+/*Double = 1;*/
+/*Select = 2;*/
+/*String = 3;*/
+/*Poly = 4;*/
 /*};*/
 /*message SettingItemDesc{*/
-  /*string name = 1;*/
-  /*string comment = 2;*/
-  /*SettingType setting_type = 3;*/
-  /*double upper = 4;*/
-  /*double lower = 5;*/
-  /*repeated SelectItemValue choice = 6;*/
-  /*SettingItemValue val = 7;*/
+/*string name = 1;*/
+/*string comment = 2;*/
+/*SettingType setting_type = 3;*/
+/*double upper = 4;*/
+/*double lower = 5;*/
+/*repeated SelectItemValue choice = 6;*/
+/*SettingItemValue val = 7;*/
 /*}*/
 
 /*message ModuleDesc{*/
-  /*string name = 1;*/
-  /*int32 index = 2;*/
-  /*bool enabled = 3;*/
-  /*repeated SettingItemDesc params = 4;*/
+/*string name = 1;*/
+/*int32 index = 2;*/
+/*bool enabled = 3;*/
+/*repeated SettingItemDesc params = 4;*/
 /*}*/
 
 /*message PortDesc{*/
-  /*enum Type{*/
-    /*INV  =0;*/
-    /*DEP  =1;*/
-    /*RGB  =2;*/
-    /*NODE =3; */
-  /*}*/
-  /*string name = 1;*/
-  /*int32 num = 2;*/
-  /*Type type = 3;*/
-  /*repeated ModuleDesc modules = 4;*/
-  /*repeated SettingItemDesc params = 5;*/
+/*enum Type{*/
+/*INV  =0;*/
+/*DEP  =1;*/
+/*RGB  =2;*/
+/*NODE =3; */
+/*}*/
+/*string name = 1;*/
+/*int32 num = 2;*/
+/*Type type = 3;*/
+/*repeated ModuleDesc modules = 4;*/
+/*repeated SettingItemDesc params = 5;*/
 /*}*/
 
 /*message NodeDesc{*/
-  /*repeated SettingItemDesc params = 1;*/
-  /*repeated PortDesc ports = 2;*/
+/*repeated SettingItemDesc params = 1;*/
+/*repeated PortDesc ports = 2;*/
 /*}*/
 
 /*message GetNodeDescRequest{*/
 /*}*/
 
 /*message ReinitRequest{*/
-  /*enum SCOPE{*/
-    /*SCOPE_NODE        =0; // */
-    /*SCOPE_PORT        =1; // */
-    /*SCOPE_MODULE      =2; // */
-  /*}*/
-  /*SCOPE scope = 1;*/
-  /*int32 port = 2;*/
-  /*int32 module = 3;*/
-  /*int32 frames = 4;*/
+/*enum SCOPE{*/
+/*SCOPE_NODE        =0; // */
+/*SCOPE_PORT        =1; // */
+/*SCOPE_MODULE      =2; // */
+/*}*/
+/*SCOPE scope = 1;*/
+/*int32 port = 2;*/
+/*int32 module = 3;*/
+/*int32 frames = 4;*/
 /*}*/
 /*message ReinitReply{*/
 /*}*/
 
 /*message SetParamRequest{*/
-  /*SCOPE scope = 1;*/
-  /*int32 port = 2;*/
-  /*int32 module = 3;*/
-  /*repeated SettingItemValue settings = 4;*/
+/*SCOPE scope = 1;*/
+/*int32 port = 2;*/
+/*int32 module = 3;*/
+/*repeated SettingItemValue settings = 4;*/
 /*}*/
 /*message SetParamReply{*/
 /*}*/
