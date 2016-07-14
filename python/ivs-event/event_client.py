@@ -62,17 +62,20 @@ class Client(threading.Thread):
 
 def run():
   channel = implementations.insecure_channel('localhost', 50051)
-  # stub = ss_pb2.beta_create_EventReporting_stub(channel)
-  stub = beta_create_DeviceMgt_and_EventReporting_stub(channel)
-  # response = stub.ReportEvent(ss_pb2.Event(description='you'), _TIMEOUT_SECONDS)
-  # stub = ss_pb2.beta_create_DeviceMgt_stub(channel)
+  event_reporting_stub = ss_pb2.beta_create_EventReporting_stub(channel)
+  # stub = beta_create_DeviceMgt_and_EventReporting_stub(channel)
+  response = event_reporting_stub.ReportEvent(ss_pb2.Event(description='you'), _TIMEOUT_SECONDS)
+  print(response)
+  device_mgt_stub = ss_pb2.beta_create_DeviceMgt_stub(channel)
+  response = device_mgt_stub.GetEventServerAddress(ss_pb2.Empty(), _TIMEOUT_SECONDS);
+  print(response)
   # response = stub.GetEventServerAddress.future(ss_pb2.Empty(), _TIMEOUT_SECONDS)
-  responses = [stub.GetEventServerAddress.future(ss_pb2.Empty(), _TIMEOUT_SECONDS) for i in range(2000) ]
-  print ("yes")
-  time.sleep(2)
-  print ("no")
-  for res in responses:
-      print(res.result())
+  # responses = [stub.GetEventServerAddress.future(ss_pb2.Empty(), _TIMEOUT_SECONDS) for i in range(2000) ]
+  # print ("yes")
+  # time.sleep(2)
+  # print ("no")
+  # for res in responses:
+      # print(res.result())
   # print response
   # clients = []
   # for i in range(200):
