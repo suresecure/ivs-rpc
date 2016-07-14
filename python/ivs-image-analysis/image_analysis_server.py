@@ -3,7 +3,7 @@
 
 import time
 
-import image_analysis_pb2
+import suresecureivs_pb2 as ss_pb2
 import tasks
 import matplotlib.pyplot as plt
 import cStringIO as StringIO
@@ -13,7 +13,7 @@ import caffe
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
-class ImageAnalysis(image_analysis_pb2.BetaImageAnalysisServicer):
+class ImageAnalysis(ss_pb2.BetaImageAnalysisServicer):
 
   def ImageClassify(self, request, context):
     # string_buffer = StringIO.StringIO(request.img)
@@ -23,10 +23,10 @@ class ImageAnalysis(image_analysis_pb2.BetaImageAnalysisServicer):
     # plt.show()
     res = tasks.ImageClassify.delay(request)
     result = res.get()
-    return image_analysis_pb2.ImageClassifyReply(type=result)
+    return ss_pb2.ImageClassifyReply(type=result)
 
 def serve():
-  server = image_analysis_pb2.beta_create_ImageAnalysis_server(ImageAnalysis())
+  server = ss_pb2.beta_create_ImageAnalysis_server(ImageAnalysis())
   server.add_insecure_port('[::]:50051')
   server.start()
   try:

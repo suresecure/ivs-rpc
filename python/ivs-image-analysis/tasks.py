@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-import image_analysis_pb2
+import suresecureivs_pb2 as ss_pb2
 import numpy as np
 import os
 from os import path, environ
@@ -90,12 +90,12 @@ def ImageClassify(requests):
     img_regions = [request.args[0] for request in requests]
     img_strings = [StringIO.StringIO(ireg.img) for ireg in img_regions]
     imgs = [caffe.io.load_image(sbuf) for sbuf in img_strings]
-    inputs = [img[ireg.y:ireg.y+ireg.h,ireg.x:ireg.x+ireg.w,:] for img,ireg in zip(imgs,img_regions)]
+    inputs = [img[ireg.y:ireg.y+ireg.h,ireg.x:ireg.x+ireg.w,:] if ireg.w>0 and ireg.h>0 else img for img,ireg in zip(imgs,img_regions)]
 
     predictions = classifier.predict(inputs, False)
     # print predictions
     # print predictions.argmax(1)
-    responses = [image_analysis_pb2.ImageClassifyReply.PERSON if predmax == 0 else image_analysis_pb2.ImageClassifyReply.BACK_GROUND
+    responses = [ss_pb2.ImageClassifyReply.PERSON if predmax == 0 else ss_pb2.ImageClassifyReply.BACK_GROUND
                  for predmax in predictions.argmax(1)]
     # print responses
 

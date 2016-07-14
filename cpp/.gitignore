@@ -8,3 +8,7 @@ thirdparty/grpc*
 thirdparty/protobuf*
 *.vcxproj.user
 *.o
+ivs-event/event_async_client
+ivs-event/event_async_server
+ivs-event/event_client
+ivs-event/event_server
