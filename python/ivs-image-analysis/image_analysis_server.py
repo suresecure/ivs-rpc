@@ -26,7 +26,7 @@ class ImageAnalysis(ss_pb2.BetaImageAnalysisServicer):
     return ss_pb2.ImageClassifyReply(type=result)
 
 def serve():
-  server = ss_pb2.beta_create_ImageAnalysis_server(ImageAnalysis())
+  server = ss_pb2.beta_create_ImageAnalysis_server(ImageAnalysis(), pool_size=2000)
   server.add_insecure_port('[::]:50051')
   server.start()
   try:

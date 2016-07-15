@@ -4,6 +4,7 @@ Debug
 *.filters
 *.dll
 *.exe
+*.out
 thirdparty/grpc*
 thirdparty/protobuf*
 *.vcxproj.user
