@@ -11,13 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\event\event.grpc.pb.cc" />
-    <ClCompile Include="..\event\event.pb.cc" />
+    <ClCompile Include="..\suresecureivs\suresecureivs.grpc.pb.cc" />
+    <ClCompile Include="..\suresecureivs\suresecureivs.pb.cc" />
     <ClCompile Include="event_server.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\event\event.grpc.pb.h" />
-    <ClInclude Include="..\event\event.pb.h" />
+    <ClInclude Include="..\suresecureivs\suresecureivs.grpc.pb.h" />
+    <ClInclude Include="..\suresecureivs\suresecureivs.pb.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7CF37C19-E06B-4186-8E05-0DA79ABF9B53}</ProjectGuid>
@@ -50,7 +50,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\thirdparty\protobuf-3.0.0-beta-2\include;..\..\thirdparty\grpc-0-13-1\include;..\event;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\thirdparty\protobuf-3.0.0-beta-2\include;..\..\thirdparty\grpc-0-13-1\include;..\suresecureivs;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\thirdparty\protobuf-3.0.0-beta-2\lib;..\..\thirdparty\grpc-0-13-1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

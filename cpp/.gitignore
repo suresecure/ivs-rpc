@@ -2,6 +2,7 @@ Debug
 *.sdf
 *.v12.suo
 *.filters
+*.opensdf
 *.dll
 *.exe
 *.out

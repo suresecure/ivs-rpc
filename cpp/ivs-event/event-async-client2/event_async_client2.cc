@@ -103,6 +103,7 @@ int main(int argc, char **argv) {
   // are created. This channel models a connection to an endpoint (in this case,
   // localhost at port 50051). We indicate that the channel isn't authenticated
   // (use of InsecureChannelCredentials()).
+  //这里也可以不适用sharedptr，直接用new，那就需要自行delete
   std::shared_ptr<EventReportingClient> client =
       std::make_shared<EventReportingClient>(grpc::CreateChannel(
           "localhost:50051", grpc::InsecureChannelCredentials()));
@@ -117,6 +118,15 @@ int main(int argc, char **argv) {
   Target *target = anno_img->add_targets();
   target->set_type(Target_Type_person);
   target->set_x(1);
+  for (int i = 0; i < 100; i++) {
+    client->ReportEvent(event); // The actual RPC call!
+  }
+
+
+  //如果事件服务器地址发生变化，则需要再建立一个客户端对象，由于使用的是shared指针
+  //前面的对象会自动释放，可能会产生等待过程，因为主线程需要等待子线程结束，才能删除对象
+  client = std::make_shared<EventReportingClient>(grpc::CreateChannel(
+          "localhost:50051", grpc::InsecureChannelCredentials()));
   for (int i = 0; i < 100; i++) {
     client->ReportEvent(event); // The actual RPC call!
   }

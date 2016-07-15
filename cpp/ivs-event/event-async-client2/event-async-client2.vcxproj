@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\thirdparty\grpc-0-13-1\include;..\..\thirdparty\protobuf-3.0.0-beta-2\include;..\event;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\thirdparty\grpc-0-13-1\include;..\..\thirdparty\protobuf-3.0.0-beta-2\include;..\suresecureivs;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\thirdparty\grpc-0-13-1\lib;..\..\thirdparty\protobuf-3.0.0-beta-2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,13 +79,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\event\event.grpc.pb.cc" />
-    <ClCompile Include="..\event\event.pb.cc" />
+    <ClCompile Include="..\suresecureivs\suresecureivs.grpc.pb.cc" />
+    <ClCompile Include="..\suresecureivs\suresecureivs.pb.cc" />
     <ClCompile Include="event_async_client2.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\event\event.grpc.pb.h" />
-    <ClInclude Include="..\event\event.pb.h" />
+    <ClInclude Include="..\suresecureivs\suresecureivs.grpc.pb.h" />
+    <ClInclude Include="..\suresecureivs\suresecureivs.pb.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
