@@ -2,29 +2,33 @@
 #include <memory>
 #include <string>
 #include <thread>
-#define _WIN32_WINNT 0x0600
 #include <grpc++/grpc++.h>
 
 #include "suresecureivs.grpc.pb.h"
-#include <unistd.h>
 
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
 using suresecureivs::Empty;
-using suresecureivs::EventServerAddress;
+//using suresecureivs::EventServerAddress;
 using suresecureivs::Event;
 using suresecureivs::GeneralReply;
 using suresecureivs::EventReporting;
-using suresecureivs::DeviceMgt;
+//using suresecureivs::DeviceMgt;
 
 // Logic and data behind the server's behavior.
 class EventReportingServiceImpl final : public EventReporting::Service {
   Status ReportEvent(ServerContext *context, const Event *request,
                      GeneralReply *reply) override {
-    std::string prefix("Hello ");
-    std::cout << std::this_thread::get_id() << std::endl;
+
+    std::cout << request->anno_imgs_size() << std::endl;
+    std::cout << request->description() << "\t" << request->hostaddress() << "\t"
+              << request->channel() << "\t" << request->person_num() << "\t"
+              << request->meter_area_num() << "\t" << request->frontend_version()
+              << std::endl;
+    // std::string prefix("Hello ");
+    // std::cout << std::this_thread::get_id() << std::endl;
     // sleep(4);
     // std::cout << request->anno_imgs_size() << std::endl;
     // if (request->anno_imgs_size() > 0)
@@ -37,33 +41,33 @@ class EventReportingServiceImpl final : public EventReporting::Service {
     //}
     //}
     // std::cout << "request name: " << request->description() << std::endl;
-    reply->set_message(prefix + request->description());
+    reply->set_message("ok");
     return Status::OK;
   }
 };
 
-class DeviceMgtServiceImpl final : public DeviceMgt::Service {
-  Status GetHealthyStatus(ServerContext *context, const Empty *request,
-                          Empty *response) override {
-    return Status::OK;
-  }
-  Status GetEventServerAddress(ServerContext *context, const Empty *request,
-                               EventServerAddress *response) override {
-    response->set_address("123");
-    return Status::OK;
-  }
-  Status SetEventServerAddress(ServerContext *context,
-                               const EventServerAddress *request,
-                               GeneralReply *response) override {
-    response->set_message("yes");
-    return Status::OK;
-  }
-};
+// class DeviceMgtServiceImpl final : public DeviceMgt::Service {
+// Status GetHealthyStatus(ServerContext *context, const Empty *request,
+// Empty *response) override {
+// return Status::OK;
+//}
+// Status GetEventServerAddress(ServerContext *context, const Empty *request,
+// EventServerAddress *response) override {
+// response->set_address("123");
+// return Status::OK;
+//}
+// Status SetEventServerAddress(ServerContext *context,
+// const EventServerAddress *request,
+// GeneralReply *response) override {
+// response->set_message("yes");
+// return Status::OK;
+//}
+//};
 
 void RunServer() {
   std::string server_address("0.0.0.0:50051");
   EventReportingServiceImpl event_reporting_service;
-  DeviceMgtServiceImpl device_mgt_service;
+  //DeviceMgtServiceImpl device_mgt_service;
 
   ServerBuilder builder;
   // Listen on the given address without any authentication mechanism.
@@ -71,7 +75,7 @@ void RunServer() {
   // Register "service" as the instance through which we'll communicate with
   // clients. In this case it corresponds to an *synchronous* service.
   builder.RegisterService(&event_reporting_service);
-  builder.RegisterService(&device_mgt_service);
+  // builder.RegisterService(&device_mgt_service);
   // Finally assemble the server.
   std::unique_ptr<Server> server(builder.BuildAndStart());
   std::cout << "Server listening on " << server_address << std::endl;
