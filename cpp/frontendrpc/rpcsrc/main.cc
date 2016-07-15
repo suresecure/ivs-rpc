@@ -18,7 +18,6 @@ int main(int argc, char **argv) {
   // rpc_server.ShutdownInThread();
   // return 0;
 
-  std::shared_ptr<Channel> channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
   // EventReportingClient greeter(grpc::CreateChannel(
   //"localhost:50051", grpc::InsecureChannelCredentials()));
 
@@ -33,6 +32,7 @@ int main(int argc, char **argv) {
   // sleep(2);
   // greeter.Wait();
 
+  std::shared_ptr<Channel> channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
   ImageAnalysisClient greeter(channel);
 
   for (int i = 0; i < 100; i++) {
@@ -42,10 +42,10 @@ int main(int argc, char **argv) {
     std::ostringstream ostrm;
     ostrm << fin.rdbuf();
     image_region.set_img(ostrm.str());
-    image_region.set_x(0);
-    image_region.set_y(1);
-    image_region.set_w(2);
-    image_region.set_h(3);
+    //image_region.set_x(0);
+    //image_region.set_y(1);
+    //image_region.set_w(2);
+    //image_region.set_h(3);
     greeter.ImageClassify(image_region); // The actual RPC call!
   }
 
