@@ -163,7 +163,7 @@ message EventForServer{
   }
   Status status = 2;
   int64 recv_dtime = 3;
-  int32 handle_dtime = 4;
+  int64 handle_dtime = 4;
   string remark = 5;
 }
 
