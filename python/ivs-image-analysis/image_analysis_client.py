@@ -43,8 +43,11 @@ def run():
   # predictions = classifier.predict(inputs, False)
   # print(predictions)
 
-  response = stub.ImageClassify(img_region, _TIMEOUT_SECONDS)
+  response = [stub.ImageClassify.future(img_region, _TIMEOUT_SECONDS) for i in range(10) ]
+
+  response = [res.result() for res in response]
   print("Greeter client received: %d" % response.type)
+  print("Greeter client received1: %d" % response1.type)
 
 
 if __name__ == '__main__':

@@ -79,7 +79,7 @@ def configure_workers(sender, signal):
     # time.sleep(2)
 
 import celery.contrib.batches
-@the_celery.task(name="tasks.ImageClassify", base=celery.contrib.batches.Batches, flush_every=batch_size, flush_interval=1)
+@the_celery.task(name="tasks.ImageClassify", queue="important", base=celery.contrib.batches.Batches, flush_every=batch_size, flush_interval=1)
 def ImageClassify(requests):
     print len(requests)
     # print current_process().index
