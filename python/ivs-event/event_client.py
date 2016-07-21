@@ -14,7 +14,7 @@ import time
 from suresecureivs_pb2 import Event
 from suresecureivs_pb2 import Empty
 from suresecureivs_pb2 import GeneralReply
-from suresecureivs_pb2 import  EventServerAddress
+from suresecureivs_pb2 import  NetworkEndpoint
 from grpc.beta import implementations as beta_implementations
 from grpc.beta import interfaces as beta_interfaces
 from grpc.framework.common import cardinality
@@ -29,12 +29,12 @@ _TIMEOUT_SECONDS = 100
 
 def run():
   channel = implementations.insecure_channel('localhost', 50051)
-  # event_reporting_stub = ss_pb2.beta_create_EventReporting_stub(channel)
+  event_reporting_stub = ss_pb2.beta_create_EventReporting_stub(channel)
   # stub = beta_create_DeviceMgt_and_EventReporting_stub(channel)
-  # response = event_reporting_stub.ReportEvent(ss_pb2.Event(description='you'), _TIMEOUT_SECONDS)
+  response = event_reporting_stub.ReportEvent(ss_pb2.Event(description='you'), _TIMEOUT_SECONDS)
   # print(response)
-  device_mgt_stub = ss_pb2.beta_create_DeviceMgt_stub(channel)
-  response = device_mgt_stub.GetEventServerAddress(ss_pb2.Empty(), _TIMEOUT_SECONDS);
+  # device_mgt_stub = ss_pb2.beta_create_DeviceMgt_stub(channel)
+  # response = device_mgt_stub.GetEventServerAddress(ss_pb2.Empty(), _TIMEOUT_SECONDS);
   print(response)
 
   # response = stub.GetEventServerAddress.future(ss_pb2.Empty(), _TIMEOUT_SECONDS)
