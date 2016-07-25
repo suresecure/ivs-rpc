@@ -87,6 +87,7 @@ def ImageClassify(requests):
     # print classifier.index
     # print "batch size"
     # print batch_size
+    # time.sleep(5)
     img_regions = [request.args[0] for request in requests]
     img_strings = [StringIO.StringIO(ireg.img) for ireg in img_regions]
     imgs = [caffe.io.load_image(sbuf) for sbuf in img_strings]

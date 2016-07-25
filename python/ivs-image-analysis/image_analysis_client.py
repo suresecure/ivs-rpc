@@ -11,7 +11,7 @@ import caffe
 
 import suresecureivs_pb2 as ss_pb2
 
-_TIMEOUT_SECONDS = 10
+_TIMEOUT_SECONDS = 500
 
 
 def run():
@@ -43,11 +43,15 @@ def run():
   # predictions = classifier.predict(inputs, False)
   # print(predictions)
 
-  response = [stub.ImageClassify.future(img_region, _TIMEOUT_SECONDS) for i in range(10) ]
+  response = [stub.ImageClassify.future(img_region, _TIMEOUT_SECONDS) for i in range(5) ]
 
-  response = [res.result() for res in response]
-  print("Greeter client received: %d" % response.type)
-  print("Greeter client received1: %d" % response1.type)
+  print("send all tasks")
+
+  for res in response:
+      print(res.result().type)
+  # response = [res.result() for res in response]
+  # print("Greeter client received: %d" % response.type)
+  # print("Greeter client received1: %d" % response1.type)
 
 
 if __name__ == '__main__':

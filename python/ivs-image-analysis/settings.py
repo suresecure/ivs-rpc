@@ -5,13 +5,15 @@ from kombu import Queue, Exchange
 CELERY_BROKER_URL='amqp://guest:guest@localhost:5672//'
 CELERY_RESULT_BACKEND='amqp://guest:guest@localhost:5672//'
 CELERYD_CONCURRENCY = 1
-CELERYD_PREFETCH_MULTIPLIER = 0
+# CELERYD_PREFETCH_MULTIPLIER = 1
+# CELERY_ACKS_LATE = True
 
 CELERY_QUEUES = (
     Queue(
         'important',
         exchange=Exchange('important'),
         routing_key="important",
-        queue_arguments={'x-max-length': 1}
+        delivery_mode=1,
     ),
 )
+        # queue_arguments={'x-max-length': 50}

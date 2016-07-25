@@ -21,7 +21,9 @@ class ImageAnalysis(ss_pb2.BetaImageAnalysisServicer):
     # plt.figure()
     # plt.imshow(img)
     # plt.show()
-    res = tasks.ImageClassify.delay(request)
+    print("new task")
+    # res = tasks.ImageClassify.delay(request, expires=1)
+    res = tasks.ImageClassify.apply_async(args=[request], expires=1)
     result = res.get()
     return ss_pb2.ImageClassifyReply(type=result)
 

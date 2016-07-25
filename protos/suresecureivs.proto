@@ -297,4 +297,6 @@ message ImageClassifyReply{
     PERSON = 1;
   }
   Type type = 1;
+  /*int32 error_code = 2;*/
+  /*string error_message = 3;*/
 }
