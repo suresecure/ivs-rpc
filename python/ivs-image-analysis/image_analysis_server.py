@@ -28,14 +28,28 @@ class ImageAnalysis(ss_pb2.BetaImageAnalysisServicer):
     return ss_pb2.ImageClassifyReply(type=result)
 
 def serve():
-  server = ss_pb2.beta_create_ImageAnalysis_server(ImageAnalysis(), pool_size=2000)
-  server.add_insecure_port('[::]:50051')
-  server.start()
-  try:
-    while True:
-      time.sleep(_ONE_DAY_IN_SECONDS)
-  except KeyboardInterrupt:
-    server.stop(0)
+  img_region = ss_pb2.ImageRegion()
+  img_file = open("/home/mythxcq/2.jpg", "rb")
+  img_region.img = img_file.read()
+  img_file.close()
+  print("test add")
+  res = tasks.ImageClassify.apply_async(args=[img_region], expires=1)
+  res2 = tasks.ImageClassify.apply_async(args=[img_region], expires=1)
+  print(res.get())
+  print(res2.get())
+  # res = tasks.TestAdd.apply_async([1,2], expires=1)
+  # res2 = tasks.TestAdd.apply_async([1,2], expires=1)
+  # print(res.get())
+  # print(res2.get())
+
+  # server = ss_pb2.beta_create_ImageAnalysis_server(ImageAnalysis(), pool_size=2000)
+  # server.add_insecure_port('[::]:50051')
+  # server.start()
+  # try:
+    # while True:
+      # time.sleep(_ONE_DAY_IN_SECONDS)
+  # except KeyboardInterrupt:
+    # server.stop(0)
 
 if __name__ == '__main__':
   serve()
