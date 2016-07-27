@@ -85,8 +85,8 @@ def TestAdd(a, b):
     time.sleep(5)
     return a+b
 
-import celery.contrib.batches
-@the_celery.task(name="tasks.ImageClassify", queue="important", base=celery.contrib.batches.Batches, flush_every=batch_size, flush_interval=1)
+import batches
+@the_celery.task(name="tasks.ImageClassify", queue="important", base=batches.Batches, flush_every=batch_size, flush_interval=1)
 def ImageClassify(requests):
     print len(requests)
     # print current_process().index
@@ -94,7 +94,7 @@ def ImageClassify(requests):
     # print classifier.index
     # print "batch size"
     # print batch_size
-    time.sleep(5)
+    time.sleep(2)
     img_regions = [request.args[0] for request in requests]
     img_strings = [StringIO.StringIO(ireg.img) for ireg in img_regions]
     imgs = [caffe.io.load_image(sbuf) for sbuf in img_strings]

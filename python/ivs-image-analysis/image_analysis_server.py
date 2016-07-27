@@ -35,8 +35,11 @@ def serve():
   print("test add")
   res = tasks.ImageClassify.apply_async(args=[img_region], expires=1)
   res2 = tasks.ImageClassify.apply_async(args=[img_region], expires=1)
+  res3 = tasks.ImageClassify.apply_async(args=[img_region], expires=1)
   print(res.get())
   print(res2.get())
+  print(res3.get())
+
   # res = tasks.TestAdd.apply_async([1,2], expires=1)
   # res2 = tasks.TestAdd.apply_async([1,2], expires=1)
   # print(res.get())
