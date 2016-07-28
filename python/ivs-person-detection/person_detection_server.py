@@ -5,6 +5,7 @@ import time
 
 import suresecureivs_pb2 as ss_pb2
 import tasks
+import celery
 import matplotlib.pyplot as plt
 import cStringIO as StringIO
 import numpy as np
@@ -21,12 +22,15 @@ class ImageAnalysis(ss_pb2.BetaImageAnalysisServicer):
     # plt.figure()
     # plt.imshow(img)
     # plt.show()
-    print("new task")
     # res = tasks.ImageClassify.delay(request, expires=1)
-    res = tasks.ObjectDetection.apply_async(args=[request], expires=1)
-    result = res.get()
-    general_reply = ss_pb2.GeneralReply(error_code = 0)
-    return ss_pb2.ObjectDetectionReply(general_reply=general_reply)
+    try:
+      res = tasks.ObjectDetection.apply_async(args=[request], expires=5)
+      result = res.get()
+      general_reply = ss_pb2.GeneralReply(error_code = 0)
+      return ss_pb2.ObjectDetectionReply(general_reply=general_reply)
+    except celery.exceptions.TaskRevokedError:
+      general_reply = ss_pb2.GeneralReply(error_code = 10)
+      return ss_pb2.ObjectDetectionReply(general_reply=general_reply)
 
 def serve():
   img_region = ss_pb2.ImageRegion()
