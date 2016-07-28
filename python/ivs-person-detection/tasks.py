@@ -19,7 +19,7 @@ from utils.timer import Timer
 import scipy.io as sio
 import caffe, os, sys
 import argparse
-print __name__
+# print __name__
 
 the_celery = celery.Celery('tasks')
                 # broker=CELERY_BROKER_URL,
@@ -29,11 +29,6 @@ the_celery.config_from_object(settings)
 # print the_celery
 # print app.config['CELERYD_POOL']
 
-prototxt = "/home/mythxcq/caffe_person_classification_models/google_net/deploy_112.prototxt"
-caffemodel = "/home/mythxcq/caffe_person_classification_models/google_net/finetune_person_googlenet_112.caffemodel"
-
-cfg.TEST.HAS_RPN = True  # Use RPN for proposals
-cfg.TEST.BBOX_REG = False
 
 # args = parse_args()
 
@@ -47,12 +42,12 @@ cfg.TEST.BBOX_REG = False
                    # 'fetch_faster_rcnn_models.sh?').format(caffemodel))
 
 # if args.cpu_mode:
-caffe.set_mode_cpu()
+# caffe.set_mode_cpu()
 # else:
     # caffe.set_mode_gpu()
     # caffe.set_device(args.gpu_id)
     # cfg.GPU_ID = args.gpu_id
-net = caffe.Net(prototxt, caffemodel, caffe.TEST)
+# net = caffe.Net(prototxt, caffemodel, caffe.TEST)
 # classifier = 0
 # print "get batch size"
 # caffe.set_mode_cpu()
@@ -71,6 +66,11 @@ def init_workers(sender, signal):
     # batch_size = 5
 @worker_process_init.connect
 def configure_workers(sender, signal):
+    prototxt = "/home/mythxcq/caffe_person_classification_models/google_net/deploy_112.prototxt"
+    caffemodel = "/home/mythxcq/caffe_person_classification_models/google_net/finetune_person_googlenet_112.caffemodel"
+
+    cfg.TEST.HAS_RPN = True  # Use RPN for proposals
+    cfg.TEST.BBOX_REG = False
     # print "worker init" + str(os.getpid())
     # Make classifier.
     # model_def = "/home/mythxcq/caffe_person_classification_models/google_net/deploy_112.prototxt"
@@ -80,7 +80,7 @@ def configure_workers(sender, signal):
     global person_detection_net
     person_detection_net = caffe.Net(prototxt, caffemodel, caffe.TEST)
     # global classifier
-    mean = np.array([104,117,123])
+    # mean = np.array([104,117,123])
     # classifier = caffe.Classifier(model_def, pretrained_model,
             # mean=mean, input_scale=None, raw_scale=255.0)
     # classifier.index = current_process().index

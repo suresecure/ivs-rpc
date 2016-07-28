@@ -27,7 +27,15 @@ class ImageAnalysis(ss_pb2.BetaImageAnalysisServicer):
       res = tasks.ObjectDetection.apply_async(args=[request], expires=5)
       result = res.get()
       general_reply = ss_pb2.GeneralReply(error_code = 0)
-      return ss_pb2.ObjectDetectionReply(general_reply=general_reply)
+      reply = ss_pb2.ObjectDetectionReply(general_reply = general_reply)
+      for:
+          ntarget = ss_pb2.targets.add()
+          ntarget.x =
+          ntarget.y =
+          ntarget.w =
+          ntarget.h =
+          ntarget.type = ss_pb2.OBJECT_TYPE_PERSON
+      return reply
     except celery.exceptions.TaskRevokedError:
       general_reply = ss_pb2.GeneralReply(error_code = 10)
       return ss_pb2.ObjectDetectionReply(general_reply=general_reply)

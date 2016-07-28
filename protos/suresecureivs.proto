@@ -293,8 +293,8 @@ message ImageRegion{
 }
 
 enum OBJECT_TYPE{
-    BACK_GROUND = 0;
-    PERSON = 1;
+    OBJECT_TYPE_BACK_GROUND = 0;
+    OBJECT_TYPE_PERSON = 1;
 }
 
 message ImageClassifyReply{
@@ -312,6 +312,5 @@ message ObjectTarget{
 
 message ObjectDetectionReply{
   GeneralReply general_reply = 1;
-  OBJECT_TYPE type = 2;
-  repeated ObjectTarget targets = 3;
+  repeated ObjectTarget targets = 2;
 }
