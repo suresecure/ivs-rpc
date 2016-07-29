@@ -26,20 +26,37 @@ class ImageAnalysis(ss_pb2.BetaImageAnalysisServicer):
     try:
       res = tasks.ObjectDetection.apply_async(args=[request], expires=5)
       result = res.get()
-      general_reply = ss_pb2.GeneralReply(error_code = 0)
-      return ss_pb2.ObjectDetectionReply(general_reply=general_reply)
+      reply = ss_pb2.ObjectDetectionReply()
+      for r in result:
+          new_target = reply.targets.add()
+          new_target.x = r[0]
+          new_target.y = r[1]
+          new_target.w = r[2]
+          new_target.h = r[3]
+          new_target.type = ss_pb2.OBJECT_TYPE_PERSON
+      print(result)
+      reply.general_reply = ss_pb2.GeneralReply(error_code = 0)
+      return reply
     except celery.exceptions.TaskRevokedError:
-      general_reply = ss_pb2.GeneralReply(error_code = 10)
+      general_reply = ss_pb2.GeneralReply(error_code = 10, message = "server is too busy")
       return ss_pb2.ObjectDetectionReply(general_reply=general_reply)
 
 def serve():
   img_region = ss_pb2.ImageRegion()
-  img_file = open("/home/mythxcq/2.jpg", "rb")
+  img_file = open("/home/mythxcq/3.jpg", "rb")
   img_region.img = img_file.read()
   img_file.close()
   print("test add")
   res = tasks.ObjectDetection.apply_async(args=[img_region], expires=1)
-  print(res.get())
+  dets = res.get()
+  print(dets)
+  # for i in inds:
+      # bbox = dets[i, :4]
+      # score = dets[i, -1]
+      # cv2.rectangle(im, (bbox[0],bbox[1]), (bbox[2],bbox[3]),
+                    # (255,0,0), 2)
+      # cv2.putText(im, str(score), (bbox[0], bbox[3]), cv2.FONT_HERSHEY_SIMPLEX,
+                    # 1, (255,0,0))
 
   # res = tasks.TestAdd.apply_async([1,2], expires=1)
   # res2 = tasks.TestAdd.apply_async([1,2], expires=1)

@@ -29,11 +29,6 @@ the_celery.config_from_object(settings)
 # print the_celery
 # print app.config['CELERYD_POOL']
 
-prototxt = "/home/mythxcq/caffe_person_classification_models/google_net/deploy_112.prototxt"
-caffemodel = "/home/mythxcq/caffe_person_classification_models/google_net/finetune_person_googlenet_112.caffemodel"
-
-cfg.TEST.HAS_RPN = True  # Use RPN for proposals
-cfg.TEST.BBOX_REG = False
 
 # args = parse_args()
 
@@ -47,12 +42,12 @@ cfg.TEST.BBOX_REG = False
                    # 'fetch_faster_rcnn_models.sh?').format(caffemodel))
 
 # if args.cpu_mode:
-caffe.set_mode_cpu()
+# caffe.set_mode_cpu()
 # else:
     # caffe.set_mode_gpu()
     # caffe.set_device(args.gpu_id)
     # cfg.GPU_ID = args.gpu_id
-net = caffe.Net(prototxt, caffemodel, caffe.TEST)
+# net = caffe.Net(prototxt, caffemodel, caffe.TEST)
 # classifier = 0
 # print "get batch size"
 # caffe.set_mode_cpu()
@@ -60,6 +55,17 @@ net = caffe.Net(prototxt, caffemodel, caffe.TEST)
 # batch_size = classifier.blobs[classifier.inputs[0]].data.shape[0]
 # classifier = None
 # batch_size = 1
+
+def init_net(index):
+    prototxt = "/home/mythxcq/faster_rcnn_person_detection_model/faster_rcnn_test.pt"
+    caffemodel = "/home/mythxcq/faster_rcnn_person_detection_model/vgg16_faster_rcnn_20160425.caffemodel"
+
+    cfg.TEST.HAS_RPN = True  # Use RPN for proposals
+    cfg.TEST.BBOX_REG = False
+    caffe.set_mode_gpu()
+    caffe.set_device(index)
+    global person_detection_net
+    person_detection_net = caffe.Net(prototxt, caffemodel, caffe.TEST)
 
 from celery.signals import worker_process_init
 from celery.signals import worker_init
@@ -71,16 +77,13 @@ def init_workers(sender, signal):
     # batch_size = 5
 @worker_process_init.connect
 def configure_workers(sender, signal):
+    init_net(current_process().index)
     # print "worker init" + str(os.getpid())
     # Make classifier.
     # model_def = "/home/mythxcq/caffe_person_classification_models/google_net/deploy_112.prototxt"
     # pretrained_model = "/home/mythxcq/caffe_person_classification_models/google_net/finetune_person_googlenet_112.caffemodel"
-    # caffe.set_mode_gpu()
-    # caffe.set_device(current_process().index)
-    global person_detection_net
-    person_detection_net = caffe.Net(prototxt, caffemodel, caffe.TEST)
     # global classifier
-    mean = np.array([104,117,123])
+    # mean = np.array([104,117,123])
     # classifier = caffe.Classifier(model_def, pretrained_model,
             # mean=mean, input_scale=None, raw_scale=255.0)
     # classifier.index = current_process().index
@@ -117,7 +120,7 @@ def detect_image(net, im):
     timer.tic()
     scores, boxes = im_detect(net, im)
     timer.toc()
-    logger.info ('Detection took {:.3f}s for '
+    print('Detection took {:.3f}s for '
            '{:d} object proposals').format(timer.total_time, boxes.shape[0])
 
     # Visualize detections for each class
@@ -132,18 +135,23 @@ def detect_image(net, im):
                       person_scores[:, np.newaxis])).astype(np.float32)
     person_keep = nms(person_dets, NMS_THRESH)
     person_dets = person_dets[person_keep, :]
+    # inds = np.where(dets[:, -1] >= CONF_THRESH)[0]
+    person_dets = person_dets[np.where(person_dets[:, -1] >= CONF_THRESH)]
     return person_dets
     # CONF_THRESH = 0.8
     # vis_person_detections(im, person_dets, thresh=CONF_THRESH)
 
+import cv2
 @the_celery.task(name="tasks.ObjectDetection", queue="important")
 def ObjectDetection(imgreg):
     # img_str = StringIO.StringIO(imgreg.img)
+    img = cv2.imdecode(np.asarray(bytearray(imgreg.img), dtype=np.uint8), -1)
     # img = caffe.io.load_image(img_str)
-    # input_img = img[ireg.y:ireg.y+ireg.h,ireg.x:ireg.x+ireg.w,:] if ireg.w>0 and ireg.h>0 else img
-    # detect_img(person_detection_net, input_img)
+    # import pdb; pdb.set_trace()  # XXX BREAKPOINT
+    input_img = img[imgreg.y:imgreg.y+imgreg.h,imgreg.x:imgreg.x+imgreg.w,:] if imgreg.w>0 and imgreg.h>0 else img
+    person_dets = detect_image(person_detection_net, input_img)
     # general_reply = ss_pb2.GeneralReply(error_code = 0)
-    person_dets = []
+    # person_dets = []
     return person_dets
 
 # import batches
@@ -178,5 +186,31 @@ def ObjectDetection(imgreg):
         # the_celery.backend.mark_as_done(request.id, response)
         # # print 'mark as done'
 
+# import cv2
+# import numpy as np
+# def create_opencv_image_from_stringio(img_stream, cv2_img_flag=0):
+    # img_stream.seek(0)
+    # img_array = np.asarray(bytearray(img_stream.read()), dtype=np.uint8)
+    # return cv2.imdecode(img_array, cv2_img_flag)
 if __name__ == '__main__':
-    celery()
+  # init_net(0)
+  # imgreg = ss_pb2.ImageRegion()
+  # img_file = open("/home/mythxcq/3.jpg", "rb")
+  # import pdb; pdb.set_trace()  # XXX BREAKPOINT
+  # imgreg.img = img_file.read()
+  # img_file.close()
+
+  # # img_str = StringIO.StringIO(imgreg.img)
+  # # img = caffe.io.load_image(img_str)
+  # # img = create_opencv_image_from_stringio(img_str)
+  # # img = cv2.imread("/home/mythxcq/3.jpg")
+  # img = cv2.imdecode(np.asarray(bytearray(imgreg.img), dtype=np.uint8), -1)
+  # input_img = img[imgreg.y:imgreg.y+imgreg.h,imgreg.x:imgreg.x+imgreg.w,:] if imgreg.w>0 and imgreg.h>0 else img
+  # # cv2.imshow("x", input_img)
+  # # cv2.waitKey(0)
+  # dets = detect_image(person_detection_net, input_img)
+  # thresh = 0.8
+  # inds = np.where(dets[:, -1] >= thresh)[0]
+  # print(inds)
+  # print(person_dets)
+  celery()
