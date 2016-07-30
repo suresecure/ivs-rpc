@@ -23,33 +23,38 @@ class ImageAnalysis(ss_pb2.BetaImageAnalysisServicer):
     # plt.imshow(img)
     # plt.show()
     # res = tasks.ImageClassify.delay(request, expires=1)
+    reply = ss_pb2.ObjectDetectionReply()
     try:
       res = tasks.ObjectDetection.apply_async(args=[request], expires=5)
       result = res.get()
-      reply = ss_pb2.ObjectDetectionReply()
       for r in result:
           new_target = reply.targets.add()
-          new_target.x = r[0]
-          new_target.y = r[1]
-          new_target.w = r[2]
-          new_target.h = r[3]
-          new_target.type = ss_pb2.OBJECT_TYPE_PERSON
+          new_target.x = (int)(r[0].item())
+          new_target.y = (int)(r[1].item())
+          new_target.w = (int)(r[2].item())-new_target.x
+          new_target.h = (int)(r[3].item())-new_target.y
+          new_target.type = ss_pb2.ObjectTarget.PERSON
       print(result)
-      reply.general_reply = ss_pb2.GeneralReply(error_code = 0)
-      return reply
+      # reply.general_reply = ss_pb2.GeneralReply(error_code = 0)
+      reply.general_reply.error_code = 0
     except celery.exceptions.TaskRevokedError:
       general_reply = ss_pb2.GeneralReply(error_code = 10, message = "server is too busy")
-      return ss_pb2.ObjectDetectionReply(general_reply=general_reply)
+      reply.general_reply.error_code = 10
+      reply.general_reply.message = "server is too busy"
+    except AttributeError:
+      reply.general_reply.error_code = 11
+      reply.general_reply.message = "image is invalid"
+    return reply
 
 def serve():
-  img_region = ss_pb2.ImageRegion()
-  img_file = open("/home/mythxcq/3.jpg", "rb")
-  img_region.img = img_file.read()
-  img_file.close()
-  print("test add")
-  res = tasks.ObjectDetection.apply_async(args=[img_region], expires=1)
-  dets = res.get()
-  print(dets)
+  # img_region = ss_pb2.ImageRegion()
+  # img_file = open("/home/mythxcq/3.jpg", "rb")
+  # img_region.img = img_file.read()
+  # img_file.close()
+  # print("test add")
+  # res = tasks.ObjectDetection.apply_async(args=[img_region], expires=1)
+  # dets = res.get()
+  # print(dets)
   # for i in inds:
       # bbox = dets[i, :4]
       # score = dets[i, -1]
@@ -63,14 +68,14 @@ def serve():
   # print(res.get())
   # print(res2.get())
 
-  # server = ss_pb2.beta_create_ImageAnalysis_server(ImageAnalysis(), pool_size=2000)
-  # server.add_insecure_port('[::]:50051')
-  # server.start()
-  # try:
-    # while True:
-      # time.sleep(_ONE_DAY_IN_SECONDS)
-  # except KeyboardInterrupt:
-    # server.stop(0)
+  server = ss_pb2.beta_create_ImageAnalysis_server(ImageAnalysis(), pool_size=2000)
+  server.add_insecure_port('[::]:50051')
+  server.start()
+  try:
+    while True:
+      time.sleep(_ONE_DAY_IN_SECONDS)
+  except KeyboardInterrupt:
+    server.stop(0)
 
 if __name__ == '__main__':
   serve()

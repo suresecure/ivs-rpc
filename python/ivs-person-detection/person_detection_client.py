@@ -48,7 +48,13 @@ def run():
   print("send all tasks")
 
   for res in response:
-      print(res.result().type)
+      x = res.result()
+      print(x.general_reply.error_code)
+      for t in x.targets:
+          print(t)
+          print(t.type)
+          print("end")
+      # print(res.result())
   # response = [res.result() for res in response]
   # print("Greeter client received: %d" % response.type)
   # print("Greeter client received1: %d" % response1.type)
