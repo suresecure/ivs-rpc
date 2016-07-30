@@ -92,12 +92,12 @@ service EventReporting {
 
 message Target{
   enum Type{
-    person                =0;
-    object                =1;
+    PERSON                =0;
+    OBJECT                =1;
   }
   enum Status{
-    normal                =0;
-    abnormal              =1;
+    NORMAL                =0;
+    ABNORMAL              =1;
   }
   int32 x = 1;
   int32 y = 2;
@@ -116,8 +116,8 @@ enum SettingAreaType{
 }
 message SettingArea{
   enum Status{
-    normal = 0;
-    abnormal = 1;
+    NORMAL = 0;
+    ABNORMAL = 1;
   }
   SettingAreaType type = 1;
   repeated int32 x=2;
@@ -280,7 +280,6 @@ message EventForServer{
 //the image analysis service
 service ImageAnalysis {
   rpc ImageClassify (ImageRegion) returns (ImageClassifyReply) {}
-
   rpc ObjectDetection (ImageRegion) returns (ObjectDetectionReply){}
 }
 
@@ -292,14 +291,13 @@ message ImageRegion{
   int32 h = 5;
 }
 
-enum OBJECT_TYPE{
-    BACK_GROUND = 0;
-    PERSON = 1;
-}
-
 message ImageClassifyReply{
   GeneralReply general_reply = 1;
-  OBJECT_TYPE type = 2;
+  enum Type{
+    BACK_GROUND = 0;
+    PERSON = 1;
+  }
+  Type type = 2;
 }
 
 message ObjectTarget{
@@ -307,11 +305,13 @@ message ObjectTarget{
   int32 y = 2;
   int32 w = 3;
   int32 h = 4;
-  OBJECT_TYPE type = 5;
+  enum Type{
+    PERSON = 0;
+  }
+  Type type = 5;
 }
 
 message ObjectDetectionReply{
   GeneralReply general_reply = 1;
-  OBJECT_TYPE type = 2;
   repeated ObjectTarget targets = 3;
 }
