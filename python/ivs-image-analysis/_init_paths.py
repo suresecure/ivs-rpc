@@ -18,6 +18,6 @@ this_dir = osp.dirname(__file__)
 
 # Add caffe to PYTHONPATH
 # caffe_path = osp.join(this_dir, '..', 'caffe-fast-rcnn', 'python')
-caffe_path = "/home/mythxcq/source_codes/caffe/python"
+caffe_path = "/home/mythxcq/work/caffe_work/caffe/python"
 add_path(caffe_path)
 

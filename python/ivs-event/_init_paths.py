@@ -19,10 +19,10 @@ this_dir = osp.dirname(__file__)
 # Add caffe to PYTHONPATH
 # caffe_path = osp.join(this_dir, '..', 'caffe-fast-rcnn', 'python')
 # caffe_path = "/home/mythxcq/source_codes/faster_rcnn/py-faster-rcnn/caffe-fast-rcnn/python"
-caffe_path = "/home/mythxcq/source_codes/caffe/python"
+caffe_path = "/home/mythxcq/work/faster_rcnn/py-faster-rcnn/caffe-fast-rcnn/python"
 add_path(caffe_path)
 
 # Add lib to PYTHONPATH
 # lib_path = osp.join(this_dir, '..', 'lib')
-# lib_path = "/home/mythxcq/source_codes/faster_rcnn/py-faster-rcnn/lib"
-# add_path(lib_path)
+lib_path = "/home/mythxcq/work/faster_rcnn/py-faster-rcnn/lib"
+add_path(lib_path)

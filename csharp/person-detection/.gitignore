@@ -1,0 +1,6 @@
+*/bin
+*/obj
+*.v12.suo
+packages
+suresecureivs/Suresecureivs.cs
+suresecureivs/SuresecureivsGrpc.cs
