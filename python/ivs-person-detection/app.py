@@ -9,6 +9,7 @@ import werkzeug
 # import tornado.wsgi
 # import tornado.httpserver
 import celery
+import celery.exceptions
 import os
 import logging
 # import batches
@@ -16,7 +17,7 @@ import time
 import datetime
 import flask_restful
 # from flask.ext import restful
-# import tasks
+import tasks
 import suresecureivs_pb2 as ss_pb2
 UPLOAD_FOLDER = '/tmp/caffe_demos_uploads'
 
@@ -27,7 +28,7 @@ app = Flask(__name__)
     # def post(self):
         # pass
 
-# curl -X POST -F image=@hy0.jpg http://localhost:8000
+# curl -X POST -F image=@hy0.jpg http://localhost:8000/person_detection
 class PersonDetection(flask_restful.Resource):
     def post(self):
         # import pdb; pdb.set_trace()  # XXX BREAKPOINT
@@ -47,14 +48,16 @@ class PersonDetection(flask_restful.Resource):
         print flask.request
         print len(flask.request.files)
 
+        img_region = ss_pb2.ImageRegion()
+
         imagefile = flask.request.files['image']
+        img_region.img = imagefile.read()
         filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
             werkzeug.secure_filename(imagefile.filename)
         filename = os.path.join(UPLOAD_FOLDER, filename_)
+        imagefile.seek(0)
         imagefile.save(filename)
 
-        img_region = ss_pb2.ImageRegion()
-        img_region.img = imagefile
 
         reply = ss_pb2.ObjectDetectionReply()
         try:
@@ -64,8 +67,8 @@ class PersonDetection(flask_restful.Resource):
           for r in result:
               x = (int)(r[0].item())
               y = (int)(r[1].item())
-              w = (int)(r[2].item())-new_target.x
-              h = (int)(r[3].item())-new_target.y
+              w = (int)(r[2].item())-x
+              h = (int)(r[3].item())-y
               targets.append({'x':x,'y':y,'w':w,'h':h})
           print(targets)
         except celery.exceptions.TaskRevokedError:
