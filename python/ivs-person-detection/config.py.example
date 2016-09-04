@@ -1,0 +1,5 @@
+caffe_path = "/home/mythxcq/work/faster_rcnn/py-faster-rcnn/caffe-fast-rcnn/python"
+lib_path = "/home/mythxcq/work/faster_rcnn/py-faster-rcnn/lib"
+
+prototxt = "/home/mythxcq/faster_rcnn_person_detection_model/faster_rcnn_test.pt"
+caffemodel = "/home/mythxcq/faster_rcnn_person_detection_model/vgg16_faster_rcnn_20160425.caffemodel"

@@ -19,6 +19,7 @@ from utils.timer import Timer
 import scipy.io as sio
 import caffe, os, sys
 import argparse
+import config
 # print __name__
 
 the_celery = celery.Celery('tasks')
@@ -57,8 +58,8 @@ the_celery.config_from_object(settings)
 # batch_size = 1
 
 def init_net(index):
-    prototxt = "/home/mythxcq/faster_rcnn_person_detection_model/faster_rcnn_test.pt"
-    caffemodel = "/home/mythxcq/faster_rcnn_person_detection_model/vgg16_faster_rcnn_20160425.caffemodel"
+    prototxt = config.prototxt
+    caffemodel = config.caffemodel
 
     cfg.TEST.HAS_RPN = True  # Use RPN for proposals
     cfg.TEST.BBOX_REG = False
