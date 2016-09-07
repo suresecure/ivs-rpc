@@ -144,7 +144,7 @@ def detect_image(net, im):
 
 import cv2
 @the_celery.task(name="tasks.ObjectDetection", queue="important")
-def ObjectDetection(imgreg, targetfilename):
+def ObjectDetection(imgreg):
     # img_str = StringIO.StringIO(imgreg.img)
     img = cv2.imdecode(np.asarray(bytearray(imgreg.img), dtype=np.uint8), -1)
     # img = caffe.io.load_image(img_str)
