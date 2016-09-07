@@ -20,6 +20,7 @@ import flask_restful
 import tasks
 import suresecureivs_pb2 as ss_pb2
 import cv2
+import numpy as np
 UPLOAD_FOLDER = '/tmp/caffe_demos_uploads'
 UPLOAD_FOLDER_DETECTED = '/tmp/caffe_demos_uploads_detected'
 
