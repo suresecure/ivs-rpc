@@ -19,6 +19,7 @@ import flask_restful
 # from flask.ext import restful
 import tasks
 import suresecureivs_pb2 as ss_pb2
+import os
 UPLOAD_FOLDER = '/tmp/caffe_demos_uploads'
 UPLOAD_FOLDER_DETECTED = '/tmp/caffe_demos_uploads_detected'
 

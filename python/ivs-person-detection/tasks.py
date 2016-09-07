@@ -20,7 +20,6 @@ import scipy.io as sio
 import caffe, os, sys
 import argparse
 import config
-import cv2
 # print __name__
 
 the_celery = celery.Celery('tasks')
