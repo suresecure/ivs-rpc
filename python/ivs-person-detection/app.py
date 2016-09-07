@@ -20,12 +20,9 @@ import flask_restful
 import tasks
 import suresecureivs_pb2 as ss_pb2
 UPLOAD_FOLDER = '/tmp/caffe_demos_uploads'
-UPLOAD_FOLDER_DETECTED = '/tmp/caffe_demos_uploads_detected'
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
-if not os.path.exists(UPLOAD_FOLDER_DETECTED):
-    os.makedirs(UPLOAD_FOLDER_DETECTED)
 
 app = Flask(__name__)
 # app.config.from_object(settings)
@@ -78,12 +75,6 @@ class PersonDetection(flask_restful.Resource):
               h = (int)(r[3].item())-y
               targets.append({'x':x,'y':y,'w':w,'h':h})
           print(targets)
-          if len(targets)>0:
-              filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
-                  werkzeug.secure_filename(imagefile.filename)
-              filename = os.path.join(UPLOAD_FOLDER_DETECTED, filename_)
-              imagefile.seek(0)
-              imagefile.save(filename)
         except celery.exceptions.TaskRevokedError:
           return {'error': 'time is out'}
         except AttributeError:
