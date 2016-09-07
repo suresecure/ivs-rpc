@@ -156,7 +156,7 @@ def ObjectDetection(imgreg):
     person_dets = detect_image(person_detection_net, input_img)
 
     for r in person_dets:
-        cv2.rectangle(img, ((int)r[0].item(),(int)r[1].item()), ((int)r[2].item,(int)r[3].item), (0,0,255), 4)
+        cv2.rectangle(img, ((int)(r[0].item()),(int)(r[1].item())), ((int)(r[2].item),(int)(r[3].item)), (0,0,255), 4)
     filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
         werkzeug.secure_filename(imagefile.filename)
     filename = os.path.join(UPLOAD_FOLDER_DETECTED, filename_)
