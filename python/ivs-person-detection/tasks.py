@@ -7,8 +7,6 @@ import optparse
 import settings
 import celery
 import logging
-import werkzeug
-import datetime
 import time
 import _init_paths
 os.environ['GLOG_minloglevel'] = '2'
@@ -22,7 +20,6 @@ import scipy.io as sio
 import caffe, os, sys
 import argparse
 import config
-UPLOAD_FOLDER_DETECTED = '/tmp/caffe_demos_uploads_detected'
 # print __name__
 
 the_celery = celery.Celery('tasks')
@@ -81,8 +78,6 @@ def init_workers(sender, signal):
     # batch_size = 5
 @worker_process_init.connect
 def configure_workers(sender, signal):
-    if not os.path.exists(UPLOAD_FOLDER_DETECTED):
-        os.makedirs(UPLOAD_FOLDER_DETECTED)
     init_net(current_process().index)
     # print "worker init" + str(os.getpid())
     # Make classifier.
@@ -157,12 +152,6 @@ def ObjectDetection(imgreg, targetfilename):
     input_img = img[imgreg.y:imgreg.y+imgreg.h,imgreg.x:imgreg.x+imgreg.w,:] if imgreg.w>0 and imgreg.h>0 else img
     person_dets = detect_image(person_detection_net, input_img)
 
-    for r in person_dets:
-        cv2.rectangle(img, ((int)(r[0].item()),(int)(r[1].item())), ((int)(r[2].item()),(int)(r[3].item())), (0,0,255), 4)
-    filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
-        werkzeug.secure_filename(targetfilename)
-    filename = os.path.join(UPLOAD_FOLDER_DETECTED, filename_)
-    cv2.imwrite(filename_, img)
     # general_reply = ss_pb2.GeneralReply(error_code = 0)
     # person_dets = []
     return person_dets

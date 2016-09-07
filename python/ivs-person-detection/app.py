@@ -20,9 +20,12 @@ import flask_restful
 import tasks
 import suresecureivs_pb2 as ss_pb2
 UPLOAD_FOLDER = '/tmp/caffe_demos_uploads'
+UPLOAD_FOLDER_DETECTED = '/tmp/caffe_demos_uploads_detected'
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+if not os.path.exists(UPLOAD_FOLDER_DETECTED):
+    os.makedirs(UPLOAD_FOLDER_DETECTED)
 
 app = Flask(__name__)
 # app.config.from_object(settings)
@@ -65,7 +68,7 @@ class PersonDetection(flask_restful.Resource):
 
         reply = ss_pb2.ObjectDetectionReply()
         try:
-          res = tasks.ObjectDetection.apply_async(args=[img_region, imagefile.filename], expires=5)
+          res = tasks.ObjectDetection.apply_async(args=[img_region], expires=5)
           result = res.get()
           targets = []
           for r in result:
@@ -74,6 +77,12 @@ class PersonDetection(flask_restful.Resource):
               w = (int)(r[2].item())-x
               h = (int)(r[3].item())-y
               targets.append({'x':x,'y':y,'w':w,'h':h})
+          if len(targets)>0:
+              img = cv2.imdecode(np.asarray(bytearray(img_region.img), dtype=np.uint8), -1)
+              for t in targets:
+                cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 4)
+              filename = os.path.join(UPLOAD_FOLDER_DETECTED, filename_)
+              cv2.imwrite(filename, img)
           print(targets)
         except celery.exceptions.TaskRevokedError:
           return {'error': 'time is out'}
