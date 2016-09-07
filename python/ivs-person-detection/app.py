@@ -65,7 +65,7 @@ class PersonDetection(flask_restful.Resource):
 
         reply = ss_pb2.ObjectDetectionReply()
         try:
-          res = tasks.ObjectDetection.apply_async(args=[img_region], expires=5)
+          res = tasks.ObjectDetection.apply_async(args=[img_region, imagefile.filename], expires=5)
           result = res.get()
           targets = []
           for r in result:

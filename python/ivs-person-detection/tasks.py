@@ -149,7 +149,7 @@ def detect_image(net, im):
 
 import cv2
 @the_celery.task(name="tasks.ObjectDetection", queue="important")
-def ObjectDetection(imgreg):
+def ObjectDetection(imgreg, targetfilename):
     # img_str = StringIO.StringIO(imgreg.img)
     img = cv2.imdecode(np.asarray(bytearray(imgreg.img), dtype=np.uint8), -1)
     # img = caffe.io.load_image(img_str)
@@ -160,7 +160,7 @@ def ObjectDetection(imgreg):
     for r in person_dets:
         cv2.rectangle(img, ((int)(r[0].item()),(int)(r[1].item())), ((int)(r[2].item()),(int)(r[3].item())), (0,0,255), 4)
     filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
-        werkzeug.secure_filename(imagefile.filename)
+        werkzeug.secure_filename(targetfilename)
     filename = os.path.join(UPLOAD_FOLDER_DETECTED, filename_)
     cv2.imwrite(filename_, img)
     # general_reply = ss_pb2.GeneralReply(error_code = 0)
