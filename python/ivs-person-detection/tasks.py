@@ -155,7 +155,7 @@ def ObjectDetection(imgreg):
     input_img = img[imgreg.y:imgreg.y+imgreg.h,imgreg.x:imgreg.x+imgreg.w,:] if imgreg.w>0 and imgreg.h>0 else img
     person_dets = detect_image(person_detection_net, input_img)
 
-    for det in person_dets:
+    for r in person_dets:
         cv2.rectangle(img, (r[0].item(),r[1].item()), (r[2].item,r[3].item), (0,0,255), 4)
     filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
         werkzeug.secure_filename(imagefile.filename)
