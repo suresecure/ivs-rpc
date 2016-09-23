@@ -124,4 +124,4 @@ if __name__ == '__main__':
 # start celery workers
 # celery -A app.the_celery worker
 # start with gunicorn and gevent
-# gunicorn -k=gevent app:app
+# gunicorn -k=gevent app:app -b 0.0.0.0
