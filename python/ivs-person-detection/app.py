@@ -82,7 +82,7 @@ class PersonDetection(flask_restful.Resource):
           if len(targets)>0:
               img = cv2.imdecode(np.asarray(bytearray(img_region.img), dtype=np.uint8), -1)
               for t in targets:
-                cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 4)
+                cv2.rectangle(img, (t['x'],t['y']), (t['x']+t['w'], t['y']+t['h']), (0,0,255), 4)
               filename = os.path.join(UPLOAD_FOLDER_DETECTED, filename_)
               cv2.imwrite(filename, img)
           print(targets)
