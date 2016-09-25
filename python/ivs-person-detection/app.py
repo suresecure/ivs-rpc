@@ -9,9 +9,16 @@ import logging
 import time
 import datetime
 import flask_restful
-import tasks
+# import tasks
 
 app = flask.Flask(__name__)
+
+import settings
+the_celery = celery.Celery('tasks')
+the_celery.config_from_object(settings)
+@the_celery.task(name="tasks.ObjectDetection", queue="important")
+def ObjectDetection(imgstream, secure_filename):
+    pass
 
 # class ImageManagement(restful.Resource):
     # def post(self):
@@ -47,7 +54,8 @@ class PersonDetection(flask_restful.Resource):
             werkzeug.secure_filename(imagefile.filename)
 
         try:
-          res = tasks.ObjectDetection.apply_async(args=[imagestream, filename_], expires=5)
+          # res = tasks.ObjectDetection.apply_async(args=[imagestream, filename_], expires=5)
+          res = ObjectDetection.apply_async(args=[imagestream, filename_], expires=5)
           result = res.get()
           print(result)
         except celery.exceptions.TaskRevokedError:

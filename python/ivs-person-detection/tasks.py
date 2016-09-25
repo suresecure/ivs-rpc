@@ -1,40 +1,28 @@
-# from __future__ import absolute_import
-# import suresecureivs_pb2 as ss_pb2
 import os
 import optparse
 import settings
 import celery
 import logging
 import time
-import _init_paths
-os.environ['GLOG_minloglevel'] = '2'
-# import caffe
-import cStringIO as StringIO
-from utils.timer import Timer
-# import scipy.io as sio
-import argparse
 import config
-# print __name__
 
 the_celery = celery.Celery('tasks')
-                # broker=CELERY_BROKER_URL,
-                # backend=CELERY_RESULT_BACKEND)
 the_celery.config_from_object(settings)
 
+if not os.path.exists(config.UPLOAD_FOLDER):
+    os.makedirs(config.UPLOAD_FOLDER)
+if not os.path.exists(config.UPLOAD_FOLDER_DETECTED):
+    os.makedirs(config.UPLOAD_FOLDER_DETECTED)
+
+import _init_paths
+from utils.timer import Timer
+os.environ['GLOG_minloglevel'] = '2'
 import numpy as np
 import cv2
 import caffe
 from fast_rcnn.config import cfg
 from fast_rcnn.test import im_detect
 from fast_rcnn.nms_wrapper import nms
-
-# print the_celery
-# print app.config['CELERYD_POOL']
-
-if not os.path.exists(config.UPLOAD_FOLDER):
-    os.makedirs(config.UPLOAD_FOLDER)
-if not os.path.exists(config.UPLOAD_FOLDER_DETECTED):
-    os.makedirs(config.UPLOAD_FOLDER_DETECTED)
 
 def init_net(index):
     prototxt = config.prototxt
@@ -99,10 +87,10 @@ def ObjectDetection(imgstream, secure_filename):
     filename = os.path.join(config.UPLOAD_FOLDER, secure_filename)
     with open(filename, "wb") as f:
         f.write(imgstream)
+    targets = []
     img = cv2.imdecode(np.asarray(bytearray(imgstream), dtype=np.uint8), -1)
     result = detect_image(person_detection_net, img)
 
-    targets = []
     for r in result:
         x = (int)(r[0].item())
         y = (int)(r[1].item())
@@ -116,6 +104,3 @@ def ObjectDetection(imgstream, secure_filename):
         cv2.imwrite(filename, img)
 
     return targets
-
-if __name__ == '__main__':
-  celery()
