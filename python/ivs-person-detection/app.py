@@ -1,13 +1,6 @@
-from __future__ import absolute_import
-from os import path, environ
-import json
-from flask import Flask, Blueprint, abort, jsonify, request, session
+# from __future__ import absolute_import
 import flask
 import werkzeug
-# import optparse
-# import settings
-# import tornado.wsgi
-# import tornado.httpserver
 import celery
 import celery.exceptions
 import os
@@ -16,21 +9,9 @@ import logging
 import time
 import datetime
 import flask_restful
-# from flask.ext import restful
 import tasks
-import suresecureivs_pb2 as ss_pb2
-import cv2
-import numpy as np
-UPLOAD_FOLDER = '/tmp/caffe_demos_uploads'
-UPLOAD_FOLDER_DETECTED = '/tmp/caffe_demos_uploads_detected'
 
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-if not os.path.exists(UPLOAD_FOLDER_DETECTED):
-    os.makedirs(UPLOAD_FOLDER_DETECTED)
-
-app = Flask(__name__)
-# app.config.from_object(settings)
+app = flask.Flask(__name__)
 
 # class ImageManagement(restful.Resource):
     # def post(self):
@@ -56,68 +37,31 @@ class PersonDetection(flask_restful.Resource):
         print flask.request
         print len(flask.request.files)
 
-        img_region = ss_pb2.ImageRegion()
+        # img_region = ss_pb2.ImageRegion()
 
         imagefile = flask.request.files['image']
-        img_region.img = imagefile.read()
+        imagestream = imagefile.read()
+        # img_region.img = imagefile.read()
 
         filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
             werkzeug.secure_filename(imagefile.filename)
-        filename = os.path.join(UPLOAD_FOLDER, filename_)
-        imagefile.seek(0)
-        imagefile.save(filename)
 
-
-        reply = ss_pb2.ObjectDetectionReply()
         try:
-          res = tasks.ObjectDetection.apply_async(args=[img_region], expires=5)
+          res = tasks.ObjectDetection.apply_async(args=[imagestream, filename_], expires=5)
           result = res.get()
-          targets = []
-          for r in result:
-              x = (int)(r[0].item())
-              y = (int)(r[1].item())
-              w = (int)(r[2].item())-x
-              h = (int)(r[3].item())-y
-              targets.append({'x':x,'y':y,'w':w,'h':h})
-          if len(targets)>0:
-              img = cv2.imdecode(np.asarray(bytearray(img_region.img), dtype=np.uint8), -1)
-              for t in targets:
-                cv2.rectangle(img, (t['x'],t['y']), (t['x']+t['w'], t['y']+t['h']), (0,0,255), 4)
-              filename = os.path.join(UPLOAD_FOLDER_DETECTED, filename_)
-              cv2.imwrite(filename, img)
-          print(targets)
+          print(result)
         except celery.exceptions.TaskRevokedError:
           return {'error': 'time is out'}
         except AttributeError:
           return {'error': 'iamge is invalid'}
         # targets = [{'x':1,'y':2,'w':3,'h':4}]
-        return {'targets':targets}
-
-        # context = {"id": res.task_id, "x": x, "y": y}
-        # result = "add((x){}, (y){})".format(context['x'], context['y'])
-        # goto = "{}".format(context['id'])
-        # # return jsonify(result=result, goto=goto)
-        # return {'result':result, 'goto':goto}
-    # def get(self):
-        # task_id = request.args.get("task_id")
-        # result = add.AsyncResult(task_id)
-        # # print result.ready()
-        # # retval = result.get(timeout=1.0)
-        # retval = result.get()
-        # # if result.ready():
-            # # return {'result':result.get()}
-        # # else:
-            # # return {'result':-1}
-        # return {'result':retval}
-        # # # print retval
+        return {'targets':result}
 
 api = flask_restful.Api(app)
 api.add_resource(PersonDetection, '/person_detection')
 
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
     # start_from_terminal(app)
     app.run(debug=True, threaded=True, host='0.0.0.0', port=8000)
 
