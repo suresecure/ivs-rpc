@@ -46,7 +46,6 @@ class PersonDetection(flask_restful.Resource):
           # print len(flask.request.files)
           imagefile = flask.request.files['image']
           imagestream = imagefile.read()
-        # img_region.img = imagefile.read()
 
           filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
               werkzeug.secure_filename(imagefile.filename)
