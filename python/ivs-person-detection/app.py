@@ -41,29 +41,30 @@ class PersonDetection(flask_restful.Resource):
         # w = request.json['w']
         # res = add.apply_async((x, y))
 
-        print flask.request
-        print len(flask.request.files)
-
-        # img_region = ss_pb2.ImageRegion()
-
-        imagefile = flask.request.files['image']
-        imagestream = imagefile.read()
+        # print flask.request
+        try:
+          # print len(flask.request.files)
+          imagefile = flask.request.files['image']
+          imagestream = imagefile.read()
         # img_region.img = imagefile.read()
 
-        filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
-            werkzeug.secure_filename(imagefile.filename)
+          filename_ = str(datetime.datetime.now()).replace(' ', '_') + \
+              werkzeug.secure_filename(imagefile.filename)
 
-        try:
-          # res = tasks.ObjectDetection.apply_async(args=[imagestream, filename_], expires=5)
           res = ObjectDetection.apply_async(args=[imagestream, filename_], expires=5)
           result = res.get()
+          # result = [{'x':1,'y':2,'w':3,'h':4}]
           print(result)
+          return {'targets':result}
         except celery.exceptions.TaskRevokedError:
+          print('time is out')
           return {'error': 'time is out'}
         except AttributeError:
+          print('image is invalid')
           return {'error': 'iamge is invalid'}
-        # targets = [{'x':1,'y':2,'w':3,'h':4}]
-        return {'targets':result}
+        except Exception, ex:
+          print(ex)
+          return {'error':str(ex)}
 
 api = flask_restful.Api(app)
 api.add_resource(PersonDetection, '/person_detection')
