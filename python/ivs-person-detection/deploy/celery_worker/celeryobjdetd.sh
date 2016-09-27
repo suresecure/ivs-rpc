@@ -1,3 +1,5 @@
+#add cuda.conf to /etc/ld.so.conf.d/
+#run ldconfig
 #for ubuntu 1404
 #add service command
 #modify line 205 to add cuda lib path
@@ -10,3 +12,6 @@ sudo cp celeryobjdetd-default /etc/default/celeryobjdetd
 sudo update-rc.d celeryobjdetd defaults 
 #to remove startup at boot
 #sudo update-rc.d -f celeryobjdetd remove
+
+#gunicorn auto start using upstart for ubuntu 1404
+

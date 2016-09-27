@@ -67,8 +67,8 @@ def detect_image(net, im):
     # Visualize detections for each class
     # CONF_THRESH = 0.0
 
-    CONF_THRESH = 0.8
-    NMS_THRESH = 0.3
+    CONF_THRESH = 0.4
+    NMS_THRESH = 0.1
     person_idx = CLASSES.index('person')
     person_boxes = boxes[:, 4*person_idx:4*(person_idx + 1)]
     person_scores = scores[:, person_idx]
