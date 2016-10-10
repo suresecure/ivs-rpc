@@ -31,7 +31,10 @@ def init_net(index):
     cfg.TEST.HAS_RPN = True  # Use RPN for proposals
     cfg.TEST.BBOX_REG = False
     caffe.set_mode_gpu()
+    # index = 1
+    print "device index:"+str(index)
     caffe.set_device(index)
+    cfg.GPU_ID = index
     global person_detection_net
     person_detection_net = caffe.Net(prototxt, caffemodel, caffe.TEST)
 
@@ -61,7 +64,7 @@ def detect_image(net, im):
     timer.tic()
     scores, boxes = im_detect(net, im)
     timer.toc()
-    print('Detection took {:.3f}s for '
+    print(str(current_process().index)+' Detection took {:.3f}s for '
            '{:d} object proposals').format(timer.total_time, boxes.shape[0])
 
     # Visualize detections for each class
