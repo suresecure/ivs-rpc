@@ -11,7 +11,6 @@ import datetime
 import flask_restful
 # import tasks
 import config
-import cv2
 
 if not os.path.exists(config.UPLOAD_FOLDER):
     os.makedirs(config.UPLOAD_FOLDER)
@@ -59,16 +58,16 @@ class PersonDetection(flask_restful.Resource):
 
           res = ObjectDetection.apply_async(args=[imagestream, filename_], expires=5)
 
-          # filename = os.path.join(config.UPLOAD_FOLDER, filename_)
-          # with open(filename, "wb") as f:
-              # f.write(imagestream)
+          filename = os.path.join(config.UPLOAD_FOLDER, filename_)
+          with open(filename, "wb") as f:
+              f.write(imagestream)
 
           result = res.get()
-          # if len(targets)>0:
-          # for t in targets:
-          # cv2.rectangle(img, (t['x'],t['y']), (t['x']+t['w'], t['y']+t['h']), (0,0,255), 4)
-          # filename = os.path.join(config.UPLOAD_FOLDER_DETECTED, secure_filename)
-          # cv2.imwrite(filename, img)
+          if len(targets)>0:
+          for t in targets:
+              filename = os.path.join(config.UPLOAD_FOLDER_DETECTED, filename_)
+              with open(filename, 'w') as f:
+                  f.write(str(targets))
           return {'targets':result}
         except celery.exceptions.TaskRevokedError:
           print('time is out')

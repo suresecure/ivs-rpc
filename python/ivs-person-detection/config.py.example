@@ -6,5 +6,7 @@ lib_path = "/home/mythxcq/work/faster_rcnn/py-faster-rcnn/lib"
 prototxt = "/home/mythxcq/faster_rcnn_person_detection_model/faster_rcnn_test.pt"
 caffemodel = "/home/mythxcq/faster_rcnn_person_detection_model/vgg16_faster_rcnn_20160425.caffemodel"
 
+save_upload_pic = True
+save_detection_result = True
 UPLOAD_FOLDER = '/tmp/caffe_demos_uploads'
 UPLOAD_FOLDER_DETECTED = '/tmp/caffe_demos_uploads_detected'
