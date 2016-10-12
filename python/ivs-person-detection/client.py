@@ -13,7 +13,7 @@ import grequests
 items = []
 for i in range(400):
     files = {'image': open('/home/mythxcq/test.jpeg', 'rb')}
-    items.append(grequests.post("http://192.168.3.71:8080/person_detection", files=files))
+    items.append(grequests.post("http://192.168.3.65:8080/person_detection", files=files))
 
 r = grequests.map(items)
 for res in r:

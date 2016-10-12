@@ -9,11 +9,6 @@ import config
 the_celery = celery.Celery('tasks')
 the_celery.config_from_object(settings)
 
-if not os.path.exists(config.UPLOAD_FOLDER):
-    os.makedirs(config.UPLOAD_FOLDER)
-if not os.path.exists(config.UPLOAD_FOLDER_DETECTED):
-    os.makedirs(config.UPLOAD_FOLDER_DETECTED)
-
 import _init_paths
 from utils.timer import Timer
 os.environ['GLOG_minloglevel'] = '2'
@@ -87,9 +82,7 @@ def detect_image(net, im):
 
 @the_celery.task(name="tasks.ObjectDetection", queue="important")
 def ObjectDetection(imgstream, secure_filename):
-    filename = os.path.join(config.UPLOAD_FOLDER, secure_filename)
-    with open(filename, "wb") as f:
-        f.write(imgstream)
+
     targets = []
     img = cv2.imdecode(np.asarray(bytearray(imgstream), dtype=np.uint8), -1)
     result = detect_image(person_detection_net, img)
@@ -100,10 +93,5 @@ def ObjectDetection(imgstream, secure_filename):
         w = (int)(r[2].item())-x
         h = (int)(r[3].item())-y
         targets.append({'x':x,'y':y,'w':w,'h':h})
-    if len(targets)>0:
-        for t in targets:
-          cv2.rectangle(img, (t['x'],t['y']), (t['x']+t['w'], t['y']+t['h']), (0,0,255), 4)
-        filename = os.path.join(config.UPLOAD_FOLDER_DETECTED, secure_filename)
-        cv2.imwrite(filename, img)
 
     return targets
