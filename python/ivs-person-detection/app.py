@@ -30,6 +30,8 @@ def ObjectDetection(imgstream, secure_filename):
     # def post(self):
         # pass
 
+num_complete_requests = 0
+
 # curl -X POST -F image=@hy0.jpg http://localhost:8000/person_detection
 class PersonDetection(flask_restful.Resource):
     def post(self):
@@ -63,11 +65,11 @@ class PersonDetection(flask_restful.Resource):
               f.write(imagestream)
 
           result = res.get()
-          if len(targets)>0:
-          for t in targets:
+          if len(result)>0:
               filename = os.path.join(config.UPLOAD_FOLDER_DETECTED, filename_)
               with open(filename, 'w') as f:
-                  f.write(str(targets))
+                  f.write(str(result))
+          num_complete_requests += 1
           return {'targets':result}
         except celery.exceptions.TaskRevokedError:
           print('time is out')
