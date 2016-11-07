@@ -137,15 +137,15 @@ message Event {
   string guid = 1;
   int32 type = 2;
   int64 seconds = 3;
-  repeated AnnotatedImage anno_imgs = 4;
+  string description = 4;
+  string hostaddress = 5;
+  int32 channel = 6;
+  string video_filename = 7;
+  string frontend_version = 8;
 
-  string description = 5;
-  string hostaddress = 6;
-  int32 channel = 7;
-  string video_filename = 8;
-  int32 person_num = 9;
-  int32 meter_area_num = 10;
-  string frontend_version = 11;
+  repeated AnnotatedImage anno_imgs = 9;
+  int32 person_num = 10;
+  int32 meter_area_num = 11;
 }
 
 message EventForServer{
