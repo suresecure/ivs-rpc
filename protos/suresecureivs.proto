@@ -14,9 +14,6 @@ message GeneralReply{
   string message = 2;
 }
 
-/*enum ErrorCode{*/
-/*}*/
-
 // The device management service definition.
 service DeviceMgt {
   rpc GetHealthyStatus (Empty) returns (Empty){}
@@ -26,10 +23,10 @@ service DeviceMgt {
   /*rpc SetImageAnalysisServerAddress(NetworkEndpoint) returns (GeneralReply){}*/
   rpc GetDeviceInfo (GetDeviceInfoRequest) returns (GetDeviceInfoReply) {}
   rpc GetNetworkConf (GetNetworkConfRequest) returns (GetNetworkConfReply){}
-  rpc SetIpv4Address (SetIpv4AddressRequest) returns (SetIpv4AddressReply){}
-  rpc SetIpv4Gateway (SetIpv4GatewayRequest) returns (SetIpv4GatewayReply){}
-  rpc Reboot (RebootRequest) returns (RebootReply){}
-  rpc Restart (RestartRequest) returns (RestartReply){}
+  rpc SetIpv4Address (SetIpv4AddressRequest) returns (GeneralReply){}
+  rpc SetIpv4Gateway (SetIpv4GatewayRequest) returns (GeneralReply){}
+  rpc Reboot (Empty) returns (GeneralReply){}
+  rpc Restart (Empty) returns (GeneralReply){}
 }
 
 message NetworkEndpoint{
@@ -39,7 +36,7 @@ int32 port = 2;
 
 // The request message containing the user's name.
 message GetDeviceInfoRequest {
-  string filename = 9;
+  string filename = 1;
 }
 
 // The response message containing the greetings
@@ -66,22 +63,9 @@ message SetIpv4AddressRequest{
   string address = 1;
   int32 prefix_length = 2;
 }
-message SetIpv4AddressReply{
-}
 
 message SetIpv4GatewayRequest{
   string gateway = 1;
-}
-message SetIpv4GatewayReply{
-}
-
-message RebootRequest{
-}
-message RebootReply{
-}
-message RestartRequest{
-}
-message RestartReply{
 }
 
 // The event service definition.
@@ -179,139 +163,154 @@ message EventForServer{
 
 // The analytic service definition.
 service Analytics {
-rpc GetNodeDesc(GetNodeDescRequest) returns (NodeDesc) {}
-rpc Reinit (ReinitRequest) returns (ReinitReply) {}
-rpc SetParam (SetParamRequest) returns (SetParamReply){}
+  rpc GetCurrentSettingPeriod(Empty) returns (PeriodIdx) {}
+  rpc SetCurrentSettingPeriod(PeriodIdx) returns (GeneralReply) {}
+  rpc GetCurrentWorkingPeroid(Empty) returns (PeriodIdx) {}
+  rpc GetPeroids(Empty) returns (Peroids) {}
+  rpc SetPeroids(Peroids) returns (GeneralReply) {}
+
+  rpc GetNodeDesc(GetNodeDescRequest) returns (NodeDesc) {}
+  rpc Reinit (ReinitRequest) returns (GeneralReply) {}
+  rpc EnableModule (SetTarget) returns (GeneralReply) {}
+  rpc DisableModule (SetTarget) returns (GeneralReply) {}
+  rpc SetParam (SetParamRequest) returns (GeneralReply){}
+}
+
+message PeriodIdx{
+  int32 idx = 1;
+}
+message Peroids{
+  repeated int64 start_time = 1;
+  repeated int64 end_time = 2;
 }
 
 message SelectItemValue{
-int32 value = 1;
-string comment = 2;
+  int32 value = 1;
+  string comment = 2;
 }
 
 message SimpleSettingValue{
-int32 int_val = 1;
-double double_val = 2;
-string string_val = 3;
+  int32 int_val = 1;
+  double double_val = 2;
+  string string_val = 3;
 }
 
 message PolySettingValue{
-SettingAreaType type = 1;
-repeated int32 x = 2;
-repeated int32 y = 3;
-repeated SimpleSettingValue params = 4;
+  SettingAreaType type = 1;
+  repeated int32 x = 2;
+  repeated int32 y = 3;
+  repeated SimpleSettingValue params = 4;
 }
 message SettingItemValue{
-string name = 1;
-int32 index = 2;
-SimpleSettingValue simple_val = 3;
-PolySettingValue poly_val = 4;
+  string name = 1;
+  int32 index = 2;
+  SimpleSettingValue simple_val = 3;
+  PolySettingValue poly_val = 4;
 }
 
 enum SettingType{
-Integer = 0;
-Double = 1;
-Select = 2;
-String = 3;
-Poly = 4;
+  Integer = 0;
+  Double = 1;
+  Select = 2;
+  String = 3;
+  Poly = 4;
 };
 message SettingItemDesc{
-string name = 1;
-string comment = 2;
-SettingType setting_type = 3;
-double upper = 4;
-double lower = 5;
-repeated SelectItemValue choice = 6;
-SettingItemValue val = 7;
+  string name = 1;
+  string comment = 2;
+  SettingType setting_type = 3;
+  double upper = 4;
+  double lower = 5;
+  repeated SelectItemValue choice = 6;
+  SettingItemValue val = 7;
 }
 
 message ModuleDesc{
-string name = 1;
-int32 index = 2;
-bool enabled = 3;
-repeated SettingItemDesc params = 4;
+  string name = 1;
+  int32 index = 2;
+  bool enabled = 3;
+  repeated SettingItemDesc params = 4;
 }
 
 message PortDesc{
-enum Type{
-INV  =0;
-DEP  =1;
-RGB  =2;
-NODE =3; 
-}
-string name = 1;
-int32 num = 2;
-Type type = 3;
-repeated ModuleDesc modules = 4;
-repeated SettingItemDesc params = 5;
+  enum Type{
+    INV  =0;
+    DEP  =1;
+    RGB  =2;
+    NODE =3; 
+  }
+  string name = 1;
+  int32 num = 2;
+  Type type = 3;
+  repeated ModuleDesc modules = 4;
+  repeated SettingItemDesc params = 5;
 }
 
 message NodeDesc{
-repeated SettingItemDesc params = 1;
-repeated PortDesc ports = 2;
+  repeated SettingItemDesc params = 1;
+  repeated PortDesc ports = 2;
 }
 
 message GetNodeDescRequest{
 }
 
-message ReinitRequest{
 enum SCOPE{
-SCOPE_NODE        =0; // 
-SCOPE_PORT        =1; // 
-SCOPE_MODULE      =2; // 
+  SCOPE_NODE        =0;
+  SCOPE_PORT        =1;
+  SCOPE_MODULE      =2;
 }
-SCOPE scope = 1;
-int32 port = 2;
-int32 module = 3;
-int32 frames = 4;
+
+message SetTarget{
+  SCOPE scope = 1;
+  int32 port = 2;
+  int32 module = 3;
 }
-message ReinitReply{
+
+message ReinitRequest{
+  SetTarget target = 1;
+  int32 frames = 2;
 }
 
 message SetParamRequest{
-SCOPE scope = 1;
-int32 port = 2;
-int32 module = 3;
-repeated SettingItemValue settings = 4;
-}
-message SetParamReply{
+  SetTarget target = 1;
+  repeated SettingItemValue settings = 2;
 }
 
 //the image analysis service
 /*service ImageAnalysis {*/
-  /*rpc ImageClassify (ImageRegion) returns (ImageClassifyReply) {}*/
-  /*rpc ObjectDetection (ImageRegion) returns (ObjectDetectionReply){}*/
+/*rpc ImageClassify (ImageRegion) returns (ImageClassifyReply) {}*/
+/*rpc ObjectDetection (ImageRegion) returns (ObjectDetectionReply){}*/
 /*}*/
 
 /*message ImageRegion{*/
-  /*bytes img = 1;*/
-  /*int32 x = 2;*/
-  /*int32 y = 3;*/
-  /*int32 w = 4;*/
-  /*int32 h = 5;*/
+/*bytes img = 1;*/
+/*int32 x = 2;*/
+/*int32 y = 3;*/
+/*int32 w = 4;*/
+/*int32 h = 5;*/
 /*}*/
 
 /*message ImageClassifyReply{*/
-  /*GeneralReply general_reply = 1;*/
-  /*enum Type{*/
-    /*BACK_GROUND = 0;*/
-    /*PERSON = 1;*/
-  /*}*/
-  /*Type type = 2;*/
+/*GeneralReply general_reply = 1;*/
+/*enum Type{*/
+/*BACK_GROUND = 0;*/
+/*PERSON = 1;*/
+/*}*/
+/*Type type = 2;*/
 /*}*/
 
 /*message ObjectTarget{*/
-  /*int32 x = 1;*/
-  /*int32 y = 2;*/
-  /*int32 w = 3;*/
-  /*int32 h = 4;*/
-  /*enum Type{*/
-    /*PERSON = 0;*/
-  /*}*/
-  /*Type type = 5;*/
+/*int32 x = 1;*/
+/*int32 y = 2;*/
+/*int32 w = 3;*/
+/*int32 h = 4;*/
+/*enum Type{*/
+/*PERSON = 0;*/
+/*}*/
+/*Type type = 5;*/
 /*}*/
 
 /*message ObjectDetectionReply{*/
-  /*GeneralReply general_reply = 1;*/
-  /*repeated ObjectTarget targets = 3;*/
+/*GeneralReply general_reply = 1;*/
+/*repeated ObjectTarget targets = 3;*/
 /*}*/
