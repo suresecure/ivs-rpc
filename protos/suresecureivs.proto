@@ -16,15 +16,14 @@ message GeneralReply{
 
 // The device management service definition.
 service DeviceMgt {
-  rpc GetHealthyStatus (Empty) returns (Empty){}
+  rpc GetHealthyStatus (Empty) returns (GeneralReply){}
   rpc GetEventServerAddress(Empty) returns (NetworkEndpoint){}
   rpc SetEventServerAddress(NetworkEndpoint) returns (GeneralReply){}
   /*rpc GetImageAnalysisServerAddress(Empty) returns (NetworkEndpoint){}*/
   /*rpc SetImageAnalysisServerAddress(NetworkEndpoint) returns (GeneralReply){}*/
   rpc GetDeviceInfo (GetDeviceInfoRequest) returns (GetDeviceInfoReply) {}
-  rpc GetNetworkConf (GetNetworkConfRequest) returns (GetNetworkConfReply){}
-  rpc SetIpv4Address (SetIpv4AddressRequest) returns (GeneralReply){}
-  rpc SetIpv4Gateway (SetIpv4GatewayRequest) returns (GeneralReply){}
+  rpc GetNetworkConf (Empty) returns (NetworkConf){}
+  rpc SetNetworkConf (NetworkConf) returns (GeneralReply){}
   rpc Reboot (Empty) returns (GeneralReply){}
   rpc Restart (Empty) returns (GeneralReply){}
 }
@@ -50,22 +49,11 @@ message GetDeviceInfoReply {
   int32  revision = 7;
 }
 
-message GetNetworkConfRequest{
-}
-message GetNetworkConfReply{
+message NetworkConf{
   string address = 1;
   int32 prefix_length = 2;
   string gateway = 3;
   string dns = 4;
-}
-
-message SetIpv4AddressRequest{
-  string address = 1;
-  int32 prefix_length = 2;
-}
-
-message SetIpv4GatewayRequest{
-  string gateway = 1;
 }
 
 // The event service definition.
@@ -163,30 +151,28 @@ message EventForServer{
 
 // The analytic service definition.
 service Analytics {
-  rpc GetCurrentSettingPeriod(Empty) returns (PeriodIdx) {}
-  rpc SetCurrentSettingPeriod(PeriodIdx) returns (GeneralReply) {}
-  rpc GetCurrentWorkingPeroid(Empty) returns (PeriodIdx) {}
-  rpc GetPeroids(Empty) returns (Peroids) {}
-  rpc SetPeroids(Peroids) returns (GeneralReply) {}
+  rpc GetCurrentWorkPeriod(Empty) returns (PeriodIdx) {}
+  rpc ForceCurrentWorkPeriod(PeroidIdx) returns (Empty) {}
+  rpc RestoreCurrentWorkPeriod(Empty) returns (GeneralReply) {}
+  rpc GetPeroids(Empty) returns (PeroidInfoList) {}
+  rpc SetPeroids(PeriodInfoList) returns (GeneralReply) {}
 
   rpc GetNodeDesc(GetNodeDescRequest) returns (NodeDesc) {}
   rpc Reinit (ReinitRequest) returns (GeneralReply) {}
-  rpc EnableModule (SetTarget) returns (GeneralReply) {}
-  rpc DisableModule (SetTarget) returns (GeneralReply) {}
+  rpc SetModuleStatus (SetModuleStatusRequest) returns (GeneralReply) {}
   rpc SetParam (SetParamRequest) returns (GeneralReply){}
 }
 
 message PeriodIdx{
   int32 idx = 1;
 }
-message Peroids{
-  repeated int64 start_time = 1;
-  repeated int64 end_time = 2;
+message PeriodInfo{
+  int64 start_time = 1;
+  int64 end_time = 2;
+  bool enabled = 3;
 }
-
-message SelectItemValue{
-  int32 value = 1;
-  string comment = 2;
+message PeriodInfoList{
+  repeated PeriodInfo period_info;
 }
 
 message SimpleSettingValue{
@@ -196,16 +182,19 @@ message SimpleSettingValue{
 }
 
 message PolySettingValue{
-  SettingAreaType type = 1;
   repeated int32 x = 2;
   repeated int32 y = 3;
   repeated SimpleSettingValue params = 4;
 }
+
 message SettingItemValue{
-  string name = 1;
-  int32 index = 2;
-  SimpleSettingValue simple_val = 3;
-  PolySettingValue poly_val = 4;
+  SimpleSettingValue simple_val = 2;
+  PolySettingValue poly_val = 3;
+}
+
+message SettingItemValueWithName{
+  string param_name = 1;
+  SettingItemValue value = 2;
 }
 
 enum SettingType{
@@ -215,13 +204,14 @@ enum SettingType{
   String = 3;
   Poly = 4;
 };
+
 message SettingItemDesc{
   string name = 1;
   string comment = 2;
   SettingType setting_type = 3;
   double upper = 4;
   double lower = 5;
-  repeated SelectItemValue choice = 6;
+  repeated string choice = 6;
   SettingItemValue val = 7;
 }
 
@@ -252,6 +242,13 @@ message NodeDesc{
 }
 
 message GetNodeDescRequest{
+  int32 param_set_idx = 1;
+}
+
+message SetModuleStatusRequest{
+  SetTarget set_target = 1;
+  int32 param_set_idx = 2;
+  bool enabled = 3;
 }
 
 enum SCOPE{
@@ -273,7 +270,8 @@ message ReinitRequest{
 
 message SetParamRequest{
   SetTarget target = 1;
-  repeated SettingItemValue settings = 2;
+  repeated SettingItemValueWithName settings = 2;
+  int32 period_idx = 3;
 }
 
 //the image analysis service
