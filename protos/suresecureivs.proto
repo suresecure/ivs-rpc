@@ -161,17 +161,12 @@ service Analytics {
   //设置指定模块、指定时间段的开始时间、结束时间、是否enable
   rpc SetModulePeriodDuration (SetModulePeriodDurationRequest) returns (GeneralReply) {}
   //强制指定模块启动指定时间段参数集合
-  rpc ForceModuleCurrentWorkPeriod (ForceModuleCurrentWorkPeriodRequest) returns (GeneralReply) {}
+  rpc ForceModuleCurrentWorkPeriod (SetTarget) returns (GeneralReply) {}
   //恢复指定模块当前工作的时间段
   rpc RestoreModuleCurrentWorkPeriod (SetTarget) returns (GeneralReply) {}
 
   //设置指定节点、通道、模块（含指定时间段）的参数
   rpc SetParam (SetParamRequest) returns (GeneralReply){}
-}
-
-ForceModuleCurrentWorkPeriodRequest{
-  SetTarget set_target = 1;
-  int32 period_idx = 2;
 }
 
 SetModulePeriodDurationRequest{
