@@ -51,7 +51,7 @@ message GetDeviceInfoReply {
 
 message NetworkConf{
   string address = 1;
-  int32 prefix_length = 2;
+  string netmask = 2;
   string gateway = 3;
   string dns = 4;
 }
