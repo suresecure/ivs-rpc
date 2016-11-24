@@ -151,28 +151,35 @@ message EventForServer{
 
 // The analytic service definition.
 service Analytics {
-  rpc GetCurrentWorkPeriod(Empty) returns (PeriodIdx) {}
-  rpc ForceCurrentWorkPeriod(PeroidIdx) returns (Empty) {}
-  rpc RestoreCurrentWorkPeriod(Empty) returns (GeneralReply) {}
-  rpc GetPeroids(Empty) returns (PeroidInfoList) {}
-  rpc SetPeroids(PeriodInfoList) returns (GeneralReply) {}
+  /*rpc GetModulePeroids(SetTarget) returns (PeroidInfoList) {}*/
+  /*rpc GetModuleCurrentWorkPeriod(SetTarget) returns (PeriodIdx) {}*/
 
-  rpc GetNodeDesc(GetNodeDescRequest) returns (NodeDesc) {}
+  rpc GetNodeDesc(Empty) returns (NodeDesc) {}
+
   rpc Reinit (ReinitRequest) returns (GeneralReply) {}
   rpc SetModuleStatus (SetModuleStatusRequest) returns (GeneralReply) {}
+  //设置指定模块、指定时间段的开始时间、结束时间、是否enable
+  rpc SetModulePeriodDuration (SetModulePeriodDurationRequest) returns (GeneralReply) {}
+  //强制指定模块启动指定时间段参数集合
+  rpc ForceModuleCurrentWorkPeriod (ForceModuleCurrentWorkPeriodRequest) returns (GeneralReply) {}
+  //恢复指定模块当前工作的时间段
+  rpc RestoreModuleCurrentWorkPeriod (SetTarget) returns (GeneralReply) {}
+
+  //设置指定节点、通道、模块（含指定时间段）的参数
   rpc SetParam (SetParamRequest) returns (GeneralReply){}
 }
 
-message PeriodIdx{
-  int32 idx = 1;
+ForceModuleCurrentWorkPeriodRequest{
+  SetTarget set_target = 1;
+  int32 period_idx = 2;
 }
-message PeriodInfo{
-  int64 start_time = 1;
-  int64 end_time = 2;
-  bool enabled = 3;
-}
-message PeriodInfoList{
-  repeated PeriodInfo period_info;
+
+SetModulePeriodDurationRequest{
+  SetTarget set_target = 1;
+  int32 idx = 2;
+  int64 start_time = 3;
+  int64 end_time = 4;
+  bool enabled = 5;
 }
 
 message SimpleSettingValue{
@@ -215,11 +222,26 @@ message SettingItemDesc{
   SettingItemValue val = 7;
 }
 
+message PeriodIdx{
+  int32 idx = 1;
+}
+
+//对应单个时间段的参数集合
+message PeriodParams{
+  int64 start_time = 1;
+  int64 end_time = 2;
+  bool enabled = 3;
+  repeated SettingItemDesc params = 4;
+}
+
 message ModuleDesc{
   string name = 1;
   int32 index = 2;
   bool enabled = 3;
-  repeated SettingItemDesc params = 4;
+  //当前正在工作的时间段索引
+  int32 active_period_idx = 4;
+  //模块内按照不同时间段分别保存参数，每个获取时将所有时间段的参数全部获取
+  repeated PeriodParams period_params = 5;
 }
 
 message PortDesc{
@@ -241,14 +263,13 @@ message NodeDesc{
   repeated PortDesc ports = 2;
 }
 
-message GetNodeDescRequest{
-  int32 param_set_idx = 1;
-}
-
+/*message GetNodeDescRequest{*/
+  /*int32 param_set_idx = 1;*/
+/*}*/
 message SetModuleStatusRequest{
   SetTarget set_target = 1;
-  int32 param_set_idx = 2;
-  bool enabled = 3;
+  /*int32 param_set_idx = 2;*/
+  bool enabled = 2;
 }
 
 enum SCOPE{
@@ -261,6 +282,7 @@ message SetTarget{
   SCOPE scope = 1;
   int32 port = 2;
   int32 module = 3;
+  int32 module_period_idx = 4;
 }
 
 message ReinitRequest{
