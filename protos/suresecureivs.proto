@@ -169,7 +169,7 @@ service Analytics {
   rpc SetParam (SetParamRequest) returns (GeneralReply){}
 }
 
-SetModulePeriodDurationRequest{
+message SetModulePeriodDurationRequest{
   SetTarget set_target = 1;
   int32 idx = 2;
   int64 start_time = 3;
