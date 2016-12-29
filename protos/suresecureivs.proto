@@ -56,10 +56,14 @@ message NetworkConf{
   string dns = 4;
 }
 
-// The event service definition.
-service EventReporting {
-  // Sends a greeting
+service SurvCenterService{
   rpc ReportEvent (Event) returns (GeneralReply) {}
+  rpc Heartbeat(HeartbeatRequest) returns (GeneralReply) {}
+}
+
+message HeartbeatRequest{
+  string device_address = 1;
+  string device_ident = 2;
 }
 
 message Target{
@@ -118,6 +122,7 @@ message Event {
   repeated AnnotatedImage anno_imgs = 9;
   int32 person_num = 10;
   int32 meter_area_num = 11;
+  string device_ident = 12;
 }
 
 message EventForServer{
@@ -137,6 +142,9 @@ message EventForServer{
   int64 recv_dtime = 3;
   int64 handle_dtime = 4;
   string remark = 5;
+  int32 id=6; 
+  string event_file=7;
+  bool verif_result = 8;
 }
 
 /*message GetEventRequest{*/
@@ -161,7 +169,7 @@ service Analytics {
   rpc SetModulePeriodDuration (SetModulePeriodDurationRequest) returns (GeneralReply) {}
   rpc ForceModuleCurrentWorkPeriod (SetTarget) returns (GeneralReply) {}
   rpc RestoreModuleCurrentWorkPeriod (SetTarget) returns (GeneralReply) {}
-
+  
   rpc SetParam (SetParamRequest) returns (GeneralReply){}
 }
 
@@ -229,9 +237,9 @@ message ModuleDesc{
   string name = 1;
   int32 index = 2;
   bool enabled = 3;
-  //当前正在工作的时间段索引
+  
   int32 active_period_idx = 4;
-  //模块内按照不同时间段分别保存参数，每个获取时将所有时间段的参数全部获取
+  
   repeated PeriodParams period_params = 5;
 }
 
