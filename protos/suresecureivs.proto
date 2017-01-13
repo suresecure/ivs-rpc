@@ -147,16 +147,6 @@ message EventForServer{
   bool verif_result = 8;
 }
 
-/*message GetEventRequest{*/
-/*uint64 start_seconds = 1;*/
-/*uint64 end_seconds = 2;*/
-/*repeated Event.EventType types = 3;*/
-/*}*/
-
-/*message GetEventReply{*/
-/*repeated Event events = 1;*/
-/*}*/
-
 // The analytic service definition.
 service Analytics {
   /*rpc GetModulePeroids(SetTarget) returns (PeroidInfoList) {}*/
@@ -230,7 +220,8 @@ message PeriodParams{
   int64 start_time = 1;
   int64 end_time = 2;
   bool enabled = 3;
-  repeated SettingItemDesc params = 4;
+  SettingItemDesc default_params = 4;
+  repeated SettingItemDesc extra_params = 5;
 }
 
 message ModuleDesc{
