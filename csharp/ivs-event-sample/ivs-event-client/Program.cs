@@ -31,6 +31,15 @@ namespace ivs_event_client
             var reply = client.ReportEvent(nevent);
             Console.WriteLine("Greeting: " + reply.Message);
 
+            HeartbeatRequest hr = new HeartbeatRequest();
+            hr.DeviceAddress = "127.0.0.1";
+            hr.DeviceIdent = "i am a deivce";
+            //异步调用心跳请求
+            var hr_reply = client.HeartbeatAsync(hr);
+            //等待异步操作返回，具体实现时可以使用完整异步机制
+            hr_reply.ResponseAsync.Wait();
+            Console.WriteLine("Heartbeat over: "+ hr_reply.ResponseAsync.Result);
+
             channel.ShutdownAsync().Wait();
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
