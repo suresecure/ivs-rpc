@@ -8,18 +8,26 @@ namespace ivs_event_client
     {
         public static void Main(string[] args)
         {
+            //建立通道
             Channel channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
 
+            //新建客户端
             var client = new SurvCenterService.SurvCenterServiceClient(channel);
+            //任意设置一些属性值
             String user = "you";
+            //新建报警事件
             Event nevent = new Event();
             nevent.Description = user;
+            //新建报警事件图片
             AnnotatedImage anno_img = new AnnotatedImage();
+            //将二进制JPEG码流拷贝到报警事件图片中
             anno_img.Img = Google.Protobuf.ByteString.CopyFrom(new byte[] { 1, 2 });
+            //设置报警事件图片中的目标
             Target target = new Target { X = 1, Y = 2, W = 3, H = 4, Type = Target.Types.Type.Person };
             anno_img.Targets.Add(target);
             nevent.AnnoImgs.Add(anno_img);
 
+            //向服务器提交报警事件
             var reply = client.ReportEvent(nevent);
             Console.WriteLine("Greeting: " + reply.Message);
 

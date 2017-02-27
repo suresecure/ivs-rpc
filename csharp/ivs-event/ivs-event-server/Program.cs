@@ -1,31 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-
-//namespace ivs_event_server
-//{
-//    class Program
-//    {
-//        static void Main(string[] args)
-//        {
-//        }
-//    }
-//}
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Suresecureivs;
 
 namespace ivs_event_server
 {
+    //实现接收报警服务
     class EventReporttingImpl : EventReporting.EventReportingBase
     {
         // Server side handler of the SayHello RPC
         public override Task<ReportEventReply> ReportEvent(Event request, ServerCallContext context)
         {
+            //接收到报警以后简单回复
             Console.WriteLine(request.AnnoImgs);
             return Task.FromResult(new ReportEventReply { Message = "Hello " + request.Description });
         }
@@ -37,6 +23,7 @@ namespace ivs_event_server
 
         public static void Main(string[] args)
         {
+            //新建服务器，并绑定服务
             Server server = new Server
             {
                 Services = { EventReporting.BindService(new EventReporttingImpl()) },
